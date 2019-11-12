@@ -33,15 +33,15 @@ More information at [allforonebusiness.org](http://www.allforonebusiness.org) Vi
 
 <table>
 <th>Phase</th><th>Block Height</th><th>Reward</th><th>Masternodes & Stakers</th><th>Budget</th>
-<tr><td>Phase 0</td><td>1001-302399</td><td>1.25 AFO</td><td>90% (1.125 AFO)</td><td>10% (0.125 AFO)</td></tr>
+<tr><td>Phase 0</td><td>1001-302399</td><td>1.250 AFO</td><td>90% (1.125 AFO)</td><td>10% (0.1250 AFO)</td></tr>
 <tr><td>Phase 1</td><td>302400-345599</td><td>1.125 AFO</td><td>90% (1.0125 AFO)</td><td>10% (0.1125 AFO)</td></tr>
-<tr><td>Phase 2</td><td>345600-388799</td><td>1.000 AFO</td><td>90% (0.900 AFO)</td><td>10% (0.100 AFO)</td></tr>
+<tr><td>Phase 2</td><td>345600-388799</td><td>1.000 AFO</td><td>90% (0.9000 AFO)</td><td>10% (0.1000 AFO)</td></tr>
 <tr><td>Phase 3</td><td>388800-431999</td><td>0.875 AFO</td><td>90% (0.7875 AFO)</td><td>10% (0.0875 AFO)</td></tr>
-<tr><td>Phase 4</td><td>432000-475199</td><td>0.750 AFO</td><td>90% (0.6750 AFO)</td><td>10% (0.075 AFO)</td></tr>
+<tr><td>Phase 4</td><td>432000-475199</td><td>0.750 AFO</td><td>90% (0.6750 AFO)</td><td>10% (0.0750 AFO)</td></tr>
 <tr><td>Phase 5</td><td>475200-518399</td><td>0.625 AFO</td><td>90% (0.5625 AFO)</td><td>10% (0.0625 AFO)</td></tr>
-<tr><td>Phase 6</td><td>518400-561599</td><td>0.500 AFO</td><td>90% (0.375 AFO)</td><td>10% (0.050 AFO)</td></tr>
+<tr><td>Phase 6</td><td>518400-561599</td><td>0.500 AFO</td><td>90% (0.3750 AFO)</td><td>10% (0.0500 AFO)</td></tr>
 <tr><td>Phase 7</td><td>561600-604799</td><td>0.375 AFO</td><td>90% (0.3375 AFO)</td><td>10% (0.0375 AFO)</td></tr>
-<tr><td>Phase 8</td><td>604800-647999</td><td>0.250 AFO</td><td>90% (0.225 AFO)</td><td>10% (0.025 AFO)</td></tr>
+<tr><td>Phase 8</td><td>604800-647999</td><td>0.250 AFO</td><td>90% (0.2250 AFO)</td><td>10% (0.0250 AFO)</td></tr>
 <tr><td>Phase 9</td><td>648000-1154203</td><td>0.125 AFO</td><td>90% (0.1125 AFO)</td><td>10% (0.0125 AFO)</td></tr>
-<tr><td>Phase X</td><td>1154203-∞</td><td>0.150 AFO</td><td>84% (0.125 AFO/zAFO)</td><td>16% (0.025 AFO)</td></tr>
+<tr><td>Phase X</td><td>1154203-∞</td><td>0.150 AFO</td><td>84% (0.1250 AFO)</td><td>16% (0.0250 AFO)</td></tr>
 </table>
