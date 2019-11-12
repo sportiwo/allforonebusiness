@@ -4,8 +4,10 @@ AllForOneBusiness Core integration/staging repository
 [![Build Status](https://travis-ci.org/AllForOneBusiness-Project/AllForOneBusiness.svg?branch=master)](https://travis-ci.org/AllForOneBusiness-Project/AllForOneBusiness) [![GitHub version](https://badge.fury.io/gh/AllForOneBusiness-Project%2FAllForOneBusiness.svg)](https://badge.fury.io/gh/AllForOneBusiness-Project%2FAllForOneBusiness)
 Mission 
 Be the reference organization for millions of people worldwide, generating confidence as well as to be engaged with the growth of entrepreneurs and enterprises, giving support as well as tools to be familiarized with the necessary guidance to develop digital projects. Using as a business channel our own Blockchain with Quark algorithm of AFO.
+
 Insight 
 The ongoing expansion of new alternatives, systems and business lines for our communities to find its financial freedom thanks to the professional performance of the project members. 
+
 Values 
 Passion is they tie that bind us as entrepreneurs, the work as a team for the benefit of the community, being honest with purpose of gaining the necessary trust that will let us be in constant growth.
 
