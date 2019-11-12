@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=AllForOneBusiness Core
+Comment=AllForOneBusiness P2P Cryptocurrency
+Comment[fr]=AllForOneBusiness, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=AllForOneBusiness, eşten eşe kriptografik sanal para birimi
+Exec=allforonebusiness-qt %u
+Terminal=false
+Type=Application
+Icon=allforonebusiness128
+MimeType=x-scheme-handler/allforonebusiness;
+Categories=Office;Finance;
+StartupWMClass=AllForOneBusiness-qt

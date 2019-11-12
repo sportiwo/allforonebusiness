@@ -1,0 +1,8 @@
+/usr/bin/allforonebusiness-cli		--	gen_context(system_u:object_r:allforonebusiness_exec_t,s0)
+/usr/sbin/allforonebusinessd		--	gen_context(system_u:object_r:allforonebusiness_exec_t,s0)
+/usr/lib(64)?/allforonebusiness/allforonebusinessd		--	gen_context(system_u:object_r:allforonebusiness_exec_t,s0)
+
+/etc/allforonebusiness(/.*)?		gen_context(system_u:object_r:allforonebusiness_conf_t,s0)
+/var/lib/allforonebusiness(/.*)?		gen_context(system_u:object_r:allforonebusiness_var_lib_t,s0)
+
+(/var)?/run/allforonebusinessd(/.*)?   gen_context(system_u:object_r:allforonebusiness_var_run_t,s0)

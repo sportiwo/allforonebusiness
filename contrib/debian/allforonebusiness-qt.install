@@ -1,0 +1,6 @@
+usr/local/bin/allforonebusiness-qt usr/bin
+share/pixmaps/allforonebusiness32.xpm usr/share/pixmaps
+share/pixmaps/allforonebusiness16.xpm usr/share/pixmaps
+share/pixmaps/allforonebusiness128.png usr/share/pixmaps
+debian/allforonebusiness-qt.desktop usr/share/applications
+debian/allforonebusiness-qt.protocol usr/share/kde4/services/

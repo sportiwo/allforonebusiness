@@ -1,0 +1,3 @@
+usr/local/bin/allforonebusinessd usr/bin
+usr/local/bin/allforonebusiness-cli usr/bin
+debian/examples/allforonebusiness.conf etc/allforonebusiness
