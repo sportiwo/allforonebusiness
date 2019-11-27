@@ -2286,15 +2286,13 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
         ret = blockValue / (100 / 30);
     } else if (nHeight < (Params().NetworkID() == CBaseChainParams::TESTNET ? 145000 : 151200) && nHeight >= 86400) {
         ret = blockValue /(100 / 50);
-    } else if (nHeight <= Params().LAST_POW_BLOCK() && nHeight >= 151200) {
-        ret = blockValue / 2;
     } else if (nHeight < Params().Zerocoin_Block_V2_Start()) {
         return GetSeeSaw(blockValue, nMasternodeCount, nHeight);
     } else {
         //When zAFO is staked, masternode only gets 2 AFO
-        ret = 3 * COIN;
+        ret = (blockValue) / 2;
         if (isZAFOStake)
-            ret = 2 * COIN;
+            ret = (blockValue) / 3;
     }
 
     return ret;
