@@ -2285,7 +2285,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     } else if (nHeight < 86400 && nHeight > 43200) {
         ret = blockValue / (100 / 30);
     } else if (nHeight < (Params().NetworkID() == CBaseChainParams::TESTNET ? 145000 : 151200) && nHeight >= 86400) {
-        ret = 50 * COIN;
+        ret = blockValue /(100 / 50);
     } else if (nHeight <= Params().LAST_POW_BLOCK() && nHeight >= 151200) {
         ret = blockValue / 2;
     } else if (nHeight < Params().Zerocoin_Block_V2_Start()) {
