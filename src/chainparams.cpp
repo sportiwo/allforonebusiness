@@ -231,7 +231,7 @@ public:
         assert(genesis.hashMerkleRoot == uint256("787ff49cfa2ab696f7b6539006b01109b4920faffcfbc2b8bd493add6ea030bd"));
 
 
-        vSeeds.push_back(CDNSSeedData("walletbuilders.com", "node1.walletbuilders.com"));
+        // vSeeds.push_back(CDNSSeedData("walletbuilders.com", "node1.walletbuilders.com"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 23);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 24);
@@ -348,9 +348,9 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "allforonebusiness-testnet.seed.fuzzbawls.pw"));
-        vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "allforonebusiness-testnet.seed2.fuzzbawls.pw"));
-        vSeeds.push_back(CDNSSeedData("warrows.dev", "testnet.dnsseed.allforonebusiness.warrows.dev"));
+        // vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "allforonebusiness-testnet.seed.fuzzbawls.pw"));
+        // vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "allforonebusiness-testnet.seed2.fuzzbawls.pw"));
+        // vSeeds.push_back(CDNSSeedData("warrows.dev", "testnet.dnsseed.allforonebusiness.warrows.dev"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 25); 
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 26);  
