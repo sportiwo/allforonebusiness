@@ -8,7 +8,7 @@ architectures:
 packages:
 - "faketime"
 remotes:
-- "url": "https://github.com/allforonebusiness-project/allforonebusiness-detached-sigs.git"
+- "url": "https://github.com/allforonebusiness/allforonebusiness-detached-sigs.git"
   "dir": "signature"
 files:
 - "allforonebusiness-osx-unsigned.tar.gz"

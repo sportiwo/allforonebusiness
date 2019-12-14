@@ -1,8 +1,8 @@
-AllForOneBusiness Core version *3.3.0* is now available from:  <https://github.com/allforonebusiness-project/allforonebusiness/releases>
+AllForOneBusiness Core version *3.3.0* is now available from:  <https://github.com/allforonebusiness/allforonebusiness/releases>
 
 This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at github: <https://github.com/allforonebusiness-project/allforonebusiness/issues>
+Please report bugs using the issue tracker at github: <https://github.com/allforonebusiness/allforonebusiness/issues>
 
 
 Mandatory Update
@@ -65,7 +65,7 @@ Notice text has been added to the privacy tab indicating that zAFO minting is di
 
 The `masternode` and `mnbudget` RPC commands, which were marked as deprecated in AllForOneBusiness Core v2.3.1 (September 19, 2017), have now been completely removed from AllForOneBusiness Core.
 
-Several new commands were added in v2.3.1 to replace the two aforementioned commands, reference the [v2.3.1 Release Notes](https://github.com/AllForOneBusiness-Project/AllForOneBusiness/blob/master/doc/release-notes/release-notes-2.3.1.md#rpc-changes) for further details.
+Several new commands were added in v2.3.1 to replace the two aforementioned commands, reference the [v2.3.1 Release Notes](https://github.com/allforonebusiness/AllForOneBusiness/blob/master/doc/release-notes/release-notes-2.3.1.md#rpc-changes) for further details.
 
 ### New `getblockindexstats` Command
 

@@ -29,7 +29,7 @@ packages:
 - "python3-setuptools"
 - "fonts-tuffy"
 remotes:
-- "url": "https://github.com/allforonebusiness-project/allforonebusiness.git"
+- "url": "https://github.com/allforonebusiness/allforonebusiness.git"
   "dir": "allforonebusiness"
 files:
 - "MacOSX10.11.sdk.tar.gz"

@@ -24,7 +24,7 @@ packages:
 - "python3"
 - "rename"
 remotes:
-- "url": "https://github.com/allforonebusiness-project/allforonebusiness.git"
+- "url": "https://github.com/allforonebusiness/allforonebusiness.git"
   "dir": "allforonebusiness"
 files: []
 script: |

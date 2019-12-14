@@ -29,8 +29,8 @@ Build-Depends: debhelper,
  dh-systemd
 Standards-Version: 3.9.2
 Homepage: http://www.allforonebusiness.org
-Vcs-Git: git://github.com/AllForOneBusiness-Project/AllForOneBusiness.git
-Vcs-Browser: http://github.com/AllForOneBusiness-Project/AllForOneBusiness
+Vcs-Git: git://github.com/allforonebusiness/AllForOneBusiness.git
+Vcs-Browser: http://github.com/allforonebusiness/AllForOneBusiness
 
 Package: allforonebusinessd
 Architecture: any
