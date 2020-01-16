@@ -48,7 +48,7 @@
 #include <atomic>
 #include <queue>
 
-#define MASTERNODE_REWARDS_CHANGE_HEIGHT_100000 100000
+#define MASTERNODE_REWARDS_CHANGE_HEIGHT 120000
 #if defined(NDEBUG)
 #error "AllForOneBusiness cannot be compiled without assertions."
 #endif
@@ -2010,7 +2010,7 @@ int64_t GetBlockValue(int nHeight)
         nSubsidy = 1000000 * COIN;
     } else if (nHeight <= Params().LAST_POW_BLOCK() && nHeight > 0) {
         nSubsidy = 1000 * COIN;
-    } else if (nHeight <= MASTERNODE_REWARDS_CHANGE_HEIGHT_100000 && nHeight > Params().LAST_POW_BLOCK()) {
+    } else if (nHeight <= MASTERNODE_REWARDS_CHANGE_HEIGHT && nHeight > Params().LAST_POW_BLOCK()) {
         nSubsidy = 45  * COIN / 40;
     } else {
         nSubsidy = 11 * COIN ;
@@ -2031,7 +2031,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
         ret = blockValue / 5;
     } else if (nHeight < 86400 && nHeight > 43200) {
         ret = blockValue / (100 / 30);
-    } else if (nHeight <= MASTERNODE_REWARDS_CHANGE_HEIGHT_100000 && nHeight >= 86400) {
+    } else if (nHeight <= MASTERNODE_REWARDS_CHANGE_HEIGHT && nHeight >= 86400) {
         ret = blockValue /(100 / 50);
     } else {
         ret = blockValue / 100 * 90;
