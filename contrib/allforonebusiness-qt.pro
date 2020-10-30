@@ -5,7 +5,7 @@
 DEFINES += ENABLE_WALLET
 
 TEMPLATE = app
-TARGET = 
+TARGET =
 DEPENDPATH += . \
               src \
               src/compat \
@@ -658,3 +658,6 @@ TRANSLATIONS += src/qt/locale/allforonebusiness_bg.ts \
                 src/qt/locale/allforonebusiness_vi.ts \
                 src/qt/locale/allforonebusiness_zh_CN.ts \
                 src/qt/locale/allforonebusiness_zh_TW.ts
+
+DISTFILES += \
+    README.md

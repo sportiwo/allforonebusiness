@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2012 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2019 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,6 @@
 
 #include "base58.h"
 #include "key.h"
-#include "main.h"
 #include "net.h"
 #include "spork.h"
 #include "sync.h"
@@ -46,12 +45,12 @@ int64_t CreateNewLock(CTransaction tx);
 bool IsIXTXValid(const CTransaction& txCollateral);
 
 // if two conflicting locks are approved by the network, they will cancel out
-bool CheckForConflictingLocks(CTransaction& tx);
+bool CheckForConflictingLocks(const CTransaction& tx);
 
 void ProcessMessageSwiftTX(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
 
 //check if we need to vote on this transaction
-void DoConsensusVote(CTransaction& tx, int64_t nBlockHeight);
+void DoConsensusVote(const CTransaction& tx, int64_t nBlockHeight);
 
 //process consensus vote message
 bool ProcessConsensusVote(CNode* pnode, CConsensusVote& ctx);
@@ -64,28 +63,42 @@ int GetTransactionLockSignatures(uint256 txHash);
 
 int64_t GetAverageVoteTime();
 
-class CConsensusVote
+class CConsensusVote : public CSignedMessage
 {
 public:
     CTxIn vinMasternode;
     uint256 txHash;
     int nBlockHeight;
-    std::vector<unsigned char> vchMasterNodeSignature;
+
+    CConsensusVote() :
+        CSignedMessage(),
+        vinMasternode(),
+        txHash(),
+        nBlockHeight(0)
+    {}
 
     uint256 GetHash() const;
 
-    bool SignatureValid();
-    bool Sign();
+    // override CSignedMessage functions
+    uint256 GetSignatureHash() const override;
+    std::string GetStrMessage() const override;
+    const CTxIn GetVin() const override { return vinMasternode; };
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    inline void SerializationOp(Stream& s, Operation ser_action)
     {
         READWRITE(txHash);
         READWRITE(vinMasternode);
-        READWRITE(vchMasterNodeSignature);
+        READWRITE(vchSig);
         READWRITE(nBlockHeight);
+        try
+        {
+            READWRITE(nMessVersion);
+        } catch (...) {
+            nMessVersion = MessageVersion::MESS_VER_STRMESS;
+        }
     }
 };
 

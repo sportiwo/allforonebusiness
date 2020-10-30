@@ -29,21 +29,21 @@ Build-Depends: debhelper,
  dh-systemd
 Standards-Version: 3.9.2
 Homepage: http://www.allforonebusiness.org
-Vcs-Git: git://github.com/allforonebusiness/AllForOneBusiness.git
-Vcs-Browser: http://github.com/allforonebusiness/AllForOneBusiness
+Vcs-Git: git://github.com/AllForOneBusiness-Project/AllForOneBusiness.git
+Vcs-Browser: http://github.com/AllForOneBusiness-Project/AllForOneBusiness
 
 Package: allforonebusinessd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - daemon
- AllForOneBusiness is a free open source peer-to-peer electronic cash system that
+ AllForOneBusiness is a free, open source peer-to-peer electronic cash system that
  is completely decentralized, without the need for a central server or
  trusted parties.  Users hold the crypto keys to their own money and
  transact directly with each other, with the help of a P2P network to
  check for double-spending.
  .
  Full transaction history is stored locally at each client.  This
- requires 10+ GB of space, slowly growing.
+ requires 18.5+ GB of space, slowly growing.
  .
  This package provides the daemon, allforonebusinessd, and the CLI tool
  allforonebusiness-cli to interact with the daemon.
@@ -52,13 +52,13 @@ Package: allforonebusiness-qt
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - Qt GUI
- AllForOneBusiness is a free open source peer-to-peer electronic cash system that
+ AllForOneBusiness is a free, open source peer-to-peer electronic cash system that
  is completely decentralized, without the need for a central server or
  trusted parties.  Users hold the crypto keys to their own money and
  transact directly with each other, with the help of a P2P network to
  check for double-spending.
  .
  Full transaction history is stored locally at each client.  This
- requires 10+ GB of space, slowly growing.
+ requires 18.5+ GB of space, slowly growing.
  .
  This package provides AllForOneBusiness-Qt, a GUI for AllForOneBusiness based on Qt.

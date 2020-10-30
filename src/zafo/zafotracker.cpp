@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The PIVX developers
+// Copyright (c) 2018-2020 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,17 +6,15 @@
 #include "zafotracker.h"
 #include "util.h"
 #include "sync.h"
-#include "main.h"
 #include "txdb.h"
+#include "wallet/wallet.h"
 #include "wallet/walletdb.h"
-#include "zafo/accumulators.h"
 #include "zafo/zafowallet.h"
-#include "witness.h"
 
 
-CzAFOTracker::CzAFOTracker(std::string strWalletFile)
+CzAFOTracker::CzAFOTracker(CWallet* parent)
 {
-    this->strWalletFile = strWalletFile;
+    this->wallet = parent;
     mapSerialHashes.clear();
     mapPendingSpends.clear();
     fInitialized = false;
@@ -42,10 +40,10 @@ bool CzAFOTracker::Archive(CMintMeta& meta)
     if (mapSerialHashes.count(meta.hashSerial))
         mapSerialHashes.at(meta.hashSerial).isArchived = true;
 
-    CWalletDB walletdb(strWalletFile);
+    CWalletDB walletdb(wallet->strWalletFile);
     CZerocoinMint mint;
     if (walletdb.ReadZerocoinMint(meta.hashPubcoin, mint)) {
-        if (!CWalletDB(strWalletFile).ArchiveMintOrphan(mint))
+        if (!CWalletDB(wallet->strWalletFile).ArchiveMintOrphan(mint))
             return error("%s: failed to archive zerocoinmint", __func__);
     } else {
         //failed to read mint from DB, try reading deterministic
@@ -62,7 +60,7 @@ bool CzAFOTracker::Archive(CMintMeta& meta)
 
 bool CzAFOTracker::UnArchive(const uint256& hashPubcoin, bool isDeterministic)
 {
-    CWalletDB walletdb(strWalletFile);
+    CWalletDB walletdb(wallet->strWalletFile);
     if (isDeterministic) {
         CDeterministicMint dMint;
         if (!walletdb.UnarchiveDeterministicMint(hashPubcoin, dMint))
@@ -110,29 +108,6 @@ bool CzAFOTracker::GetMetaFromStakeHash(const uint256& hashStake, CMintMeta& met
     return false;
 }
 
-CoinWitnessData* CzAFOTracker::GetSpendCache(const uint256& hashStake)
-{
-    AssertLockHeld(cs_spendcache);
-    if (!mapStakeCache.count(hashStake)) {
-        std::unique_ptr<CoinWitnessData> uptr(new CoinWitnessData());
-        mapStakeCache.insert(std::make_pair(hashStake, std::move(uptr)));
-        return mapStakeCache.at(hashStake).get();
-    }
-
-    return mapStakeCache.at(hashStake).get();
-}
-
-bool CzAFOTracker::ClearSpendCache()
-{
-    AssertLockHeld(cs_spendcache);
-    if (!mapStakeCache.empty()) {
-        mapStakeCache.clear();
-        return true;
-    }
-
-    return false;
-}
-
 std::vector<uint256> CzAFOTracker::GetSerialHashes()
 {
     std::vector<uint256> vHashes;
@@ -153,17 +128,17 @@ CAmount CzAFOTracker::GetBalance(bool fConfirmedOnly, bool fUnconfirmedOnly) con
     //! zerocoin specific fields
     std::map<libzerocoin::CoinDenomination, unsigned int> myZerocoinSupply;
     for (auto& denom : libzerocoin::zerocoinDenomList) {
-        myZerocoinSupply.insert(std::make_pair(denom, 0));
+        myZerocoinSupply.emplace(denom, 0);
     }
 
     {
-        //LOCK(cs_pivtracker);
+        //LOCK(cs_afotracker);
         // Get Unused coins
         for (auto& it : mapSerialHashes) {
             CMintMeta meta = it.second;
             if (meta.isUsed || meta.isArchived)
                 continue;
-            bool fConfirmed = ((meta.nHeight < chainActive.Height() - Params().Zerocoin_MintRequiredConfirmations()) && !(meta.nHeight == 0));
+            bool fConfirmed = ((meta.nHeight < chainActive.Height() - Params().GetConsensus().ZC_MinMintConfirmations) && !(meta.nHeight == 0));
             if (fConfirmedOnly && !fConfirmed)
                 continue;
             if (fUnconfirmedOnly && fConfirmed)
@@ -191,7 +166,7 @@ std::vector<CMintMeta> CzAFOTracker::GetMints(bool fConfirmedOnly) const
         CMintMeta mint = it.second;
         if (mint.isArchived || mint.isUsed)
             continue;
-        bool fConfirmed = (mint.nHeight < chainActive.Height() - Params().Zerocoin_MintRequiredConfirmations());
+        bool fConfirmed = (mint.nHeight < chainActive.Height() - Params().GetConsensus().ZC_MinMintConfirmations);
         if (fConfirmedOnly && !fConfirmed)
             continue;
         vMints.emplace_back(mint);
@@ -254,12 +229,12 @@ bool CzAFOTracker::UpdateZerocoinMint(const CZerocoinMint& mint)
     mapSerialHashes.at(hashSerial) = meta;
 
     //Write to db
-    return CWalletDB(strWalletFile).WriteZerocoinMint(mint);
+    return CWalletDB(wallet->strWalletFile).WriteZerocoinMint(mint);
 }
 
 bool CzAFOTracker::UpdateState(const CMintMeta& meta)
 {
-    CWalletDB walletdb(strWalletFile);
+    CWalletDB walletdb(wallet->strWalletFile);
 
     if (meta.isDeterministic) {
         CDeterministicMint dMint;
@@ -302,7 +277,7 @@ bool CzAFOTracker::UpdateState(const CMintMeta& meta)
 
 void CzAFOTracker::Add(const CDeterministicMint& dMint, bool isNew, bool isArchived, CzAFOWallet* zAFOWallet)
 {
-    bool iszAFOWalletInitialized = (NULL != zAFOWallet);
+    bool iszAFOWalletInitialized = (nullptr != zAFOWallet);
     CMintMeta meta;
     meta.hashPubcoin = dMint.GetPubcoinHash();
     meta.nHeight = dMint.GetHeight();
@@ -314,15 +289,15 @@ void CzAFOTracker::Add(const CDeterministicMint& dMint, bool isNew, bool isArchi
     meta.denom = dMint.GetDenomination();
     meta.isArchived = isArchived;
     meta.isDeterministic = true;
-    if (! iszAFOWalletInitialized)
-        zAFOWallet = new CzAFOWallet(strWalletFile);
+    if (!iszAFOWalletInitialized)
+        zAFOWallet = new CzAFOWallet(wallet);
     meta.isSeedCorrect = zAFOWallet->CheckSeed(dMint);
-    if (! iszAFOWalletInitialized)
+    if (!iszAFOWalletInitialized)
         delete zAFOWallet;
     mapSerialHashes[meta.hashSerial] = meta;
 
     if (isNew)
-        CWalletDB(strWalletFile).WriteDeterministicMint(dMint);
+        CWalletDB(wallet->strWalletFile).WriteDeterministicMint(dMint);
 }
 
 void CzAFOTracker::Add(const CZerocoinMint& mint, bool isNew, bool isArchived)
@@ -343,7 +318,7 @@ void CzAFOTracker::Add(const CZerocoinMint& mint, bool isNew, bool isArchived)
     mapSerialHashes[meta.hashSerial] = meta;
 
     if (isNew)
-        CWalletDB(strWalletFile).WriteZerocoinMint(mint);
+        CWalletDB(wallet->strWalletFile).WriteZerocoinMint(mint);
 }
 
 void CzAFOTracker::SetPubcoinUsed(const uint256& hashPubcoin, const uint256& txid)
@@ -352,7 +327,7 @@ void CzAFOTracker::SetPubcoinUsed(const uint256& hashPubcoin, const uint256& txi
         return;
     CMintMeta meta = GetMetaFromPubcoin(hashPubcoin);
     meta.isUsed = true;
-    mapPendingSpends.insert(std::make_pair(meta.hashSerial, txid));
+    mapPendingSpends.emplace(meta.hashSerial, txid);
     UpdateState(meta);
 }
 
@@ -379,7 +354,7 @@ void CzAFOTracker::RemovePending(const uint256& txid)
         }
     }
 
-    if (hashSerial > 0)
+    if (!hashSerial.IsNull())
         mapPendingSpends.erase(hashSerial);
 }
 
@@ -414,7 +389,7 @@ bool CzAFOTracker::UpdateStatusInternal(const std::set<uint256>& setMempool, CMi
         uint256 hashBlock;
 
         // Txid will be marked 0 if there is no knowledge of the final tx hash yet
-        if (mint.txid == 0) {
+        if (mint.txid.IsNull()) {
             if (!isMintInChain) {
                 LogPrintf("%s : Failed to find mint in zerocoinDB %s\n", __func__, mint.hashPubcoin.GetHex().substr(0, 6));
                 mint.isArchived = true;
@@ -461,23 +436,21 @@ bool CzAFOTracker::UpdateStatusInternal(const std::set<uint256>& setMempool, CMi
 
 std::set<CMintMeta> CzAFOTracker::ListMints(bool fUnusedOnly, bool fMatureOnly, bool fUpdateStatus, bool fWrongSeed, bool fExcludeV1)
 {
-    CWalletDB walletdb(strWalletFile);
+    CWalletDB walletdb(wallet->strWalletFile);
     if (fUpdateStatus) {
         std::list<CZerocoinMint> listMintsDB = walletdb.ListMintedCoins();
         for (auto& mint : listMintsDB)
             Add(mint);
-        LogPrint("zero", "%s: added %d zerocoinmints from DB\n", __func__, listMintsDB.size());
+        LogPrint(BCLog::LEGACYZC, "%s: added %d zerocoinmints from DB\n", __func__, listMintsDB.size());
 
         std::list<CDeterministicMint> listDeterministicDB = walletdb.ListDeterministicMints();
 
-        CzAFOWallet* zAFOWallet = new CzAFOWallet(strWalletFile);
         for (auto& dMint : listDeterministicDB) {
             if (fExcludeV1 && dMint.GetVersion() < 2)
                 continue;
-            Add(dMint, false, false, zAFOWallet);
+            Add(dMint, false, false, wallet->getZWallet());
         }
-        delete zAFOWallet;
-        LogPrint("zero", "%s: added %d dzafo from DB\n", __func__, listDeterministicDB.size());
+        LogPrint(BCLog::LEGACYZC, "%s: added %d dzafo from DB\n", __func__, listDeterministicDB.size());
     }
 
     std::vector<CMintMeta> vOverWrite;
@@ -488,7 +461,6 @@ std::set<CMintMeta> CzAFOTracker::ListMints(bool fUnusedOnly, bool fMatureOnly, 
         mempool.getTransactions(setMempool);
     }
 
-    std::map<libzerocoin::CoinDenomination, int> mapMaturity = GetMintMaturityHeight();
     for (auto& it : mapSerialHashes) {
         CMintMeta mint = it.second;
 
@@ -510,9 +482,7 @@ std::set<CMintMeta> CzAFOTracker::ListMints(bool fUnusedOnly, bool fMatureOnly, 
 
         if (fMatureOnly) {
             // Not confirmed
-            if (!mint.nHeight || mint.nHeight > chainActive.Height() - Params().Zerocoin_MintRequiredConfirmations())
-                continue;
-            if (mint.nHeight >= mapMaturity.at(mint.denom))
+            if (!mint.nHeight || mint.nHeight > chainActive.Height() - Params().GetConsensus().ZC_MinMintConfirmations)
                 continue;
         }
 

@@ -16,6 +16,9 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "(1 = keep tx meta data e.g. account owner and payment request information, 2 "
 "= drop tx meta data)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Accept connections from outside (default: 1 if no -proxy or -connect/-"
+"noconnect)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Allow JSON-RPC connections from specified source. Valid for <ip> are a "
 "single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or "
 "a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times"),
@@ -30,13 +33,14 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "notation for IPv6. This option can be specified multiple times (default: "
 "bind to all interfaces)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Calculated accumulator checkpoint is not what is recorded by block index"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Cannot obtain a lock on data directory %s. AllForOneBusiness Core is probably already "
 "running."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Change automatic finalized budget voting behavior. mode=auto: Vote for only "
-"exact finalized budget match to my generated budget. (std::string, default: auto)"),
+"exact finalized budget match to my generated budget. (string, default: auto)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Connect only to the specified node(s); -noconnect or -connect=0 alone to "
+"disable automatic connections"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Continuously rate-limit free transactions to <n>*1000 bytes per minute "
 "(default:%u)"),
@@ -56,16 +60,23 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Distributed under the MIT software license, see the accompanying file "
 "COPYING or <http://www.opensource.org/licenses/mit-license.php>."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Do not accept transactions if any ancestor would have <n> or more in-mempool "
+"descendants (default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Do not accept transactions if any ancestor would have more than <n> "
+"kilobytes of in-mempool descendants (default: %u)."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Do not accept transactions if number of in-mempool ancestors is <n> or more "
+"(default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Do not accept transactions whose size with all in-mempool ancestors exceeds "
+"<n> kilobytes (default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Do not keep transactions in the mempool longer than <n> hours (default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Enable SwiftX, show confirmations for locked transactions (bool, default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Enable automatic Zerocoin minting from specific addresses (0-1, default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Enable automatic wallet backups triggered after each zAFO minting (0-1, "
-"default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Enable or disable staking functionality for AFO inputs (0-1, default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Enable or disable staking functionality for zAFO inputs (0-1, default: %u)"),
+"Enable cold staking functionality (0-1, default: %u). Disabled if staking=0"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Enable spork administration functionality with the appropriate private key."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
@@ -76,17 +87,14 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Error: The transaction is larger than the maximum allowed transaction size!"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Error: The transaction was rejected! This might happen if some of the coins "
-"in your wallet were already spent, such as if you used a copy of wallet.dat "
-"and coins were spent in the copy but not marked as spent here."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Error: This transaction requires a transaction fee of at least %s because of "
-"its amount, complexity, or use of recently received funds!"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Error: Unsupported argument -checklevel found. Checklevel must be level 4."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Error: Unsupported argument -socks found. Setting SOCKS version isn't "
 "possible anymore, only SOCKS5 proxies are supported."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Exclude debugging information for a category. Can be used in conjunction "
+"with -debug=1 to output debug logs for all categories except one or more "
+"specified categories."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Execute command when a relevant alert is received or we see a really long "
 "fork (%s in cmd is replaced by message)"),
@@ -102,10 +110,10 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Failed to find coin set amongst held coins with less than maxNumber of Spends"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Fees (in AFO/Kb) smaller than this are considered zero fee for relaying "
-"(default: %s)"),
+"Fees (in %s/Kb) smaller than this are considered zero fee for relaying, "
+"mining and transaction creation (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Fees (in AFO/Kb) smaller than this are considered zero fee for transaction "
+"Fees (in %s/Kb) smaller than this are considered zero fee for transaction "
 "creation (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Flush database activity from memory pool to disk log every <n> megabytes "
@@ -126,8 +134,6 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Invalid amount for -maxtxfee=<amount>: '%s' (must be at least the minrelay "
 "fee of %s to prevent stuck transactions)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Keep the specified amount available for spending at all times (default: 0)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Log transaction priority and fee per kB when mining blocks (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Maintain a full transaction index, used by the getrawtransaction rpc call "
@@ -144,18 +150,18 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Maximum total fees to use in a single wallet transaction, setting too low "
 "may abort large transactions (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Number of seconds to keep misbehaving peers from reconnecting (default: %u)"),
+"Minimum positive amount (in AFO) allowed by GUI and RPC for the stake split "
+"threshold (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Obfuscation uses exact denominated amounts to send funds, you might simply "
-"need to anonymize some more coins."),
+"Number of seconds to keep misbehaving peers from reconnecting (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Output debugging information (default: %u, supplying <category> is optional)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Preferred Denomination for automatically minted Zerocoin  "
-"(1/5/10/50/100/500/1000/5000), 0 for no preference. default: %u)"),
+"Please check that your computer's date and time are correct! If your clock "
+"is wrong AllForOneBusiness Core will not work properly."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Query for peer addresses via DNS lookup, if low on addresses (default: 1 "
-"unless -connect)"),
+"unless -connect/-noconnect)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Randomize credentials for every proxy connection. This enables Tor stream "
 "isolation (default: %u)"),
@@ -166,9 +172,6 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Set maximum size of high-priority/low-fee transactions in bytes (default: %d)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Set the number of included blocks to precompute per cycle. (minimum: %d) "
-"(maximum: %d) (default: %d)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Set the number of script verification threads (%u to %d, 0 = auto, <0 = "
 "leave that many cores free, default: %d)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
@@ -178,14 +181,12 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Show N confirmations for a successfully locked transaction (0-9999, default: "
 "%u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Specify custom backup path to add a copy of any automatic zAFO backup. If "
-"set as dir, every backup generates a timestamped file. If set as file, will "
-"rewrite to that file every backup. If backuppath is set as well, 4 backups "
-"will happen"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Specify custom backup path to add a copy of any wallet backup. If set as "
 "dir, every backup generates a timestamped file. If set as file, will rewrite "
 "to that file every backup."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"Specify location of debug log file: this can be an absolute path or a path "
+"relative to the data directory (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Support filtering of blocks and transaction with bloom filters (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
@@ -209,16 +210,11 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Unable to bind to %s on this computer. AllForOneBusiness Core is probably already running."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Unable to locate enough Obfuscation denominated funds for this transaction."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Unable to locate enough Obfuscation non-denominated funds for this "
-"transaction that are not equal 1000 AFO."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
-"Unable to locate enough funds for this transaction that are not equal 1000 "
-"AFO."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: "
 "%s)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", ""
+"WARNING: The transaction has been signed and recorded, so the wallet will "
+"try to re-send it. Use 'abandontransaction' to cancel it. (txid: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "Warning: -maxtxfee is set very high! Fees this large could be paid on a "
 "single transaction."),
@@ -250,42 +246,36 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 QT_TRANSLATE_NOOP("allforonebusiness-core", ""
 "You must specify a masternodeprivkey in the configuration. Please see "
 "documentation for help."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "(11888 could be used only on mainnet)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "(default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "(default: 1)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "(must be 11888 for mainnet)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "(must be %d for %s-net)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "<category> can be:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Accept command line and JSON-RPC commands"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Accept connections from outside (default: 1 if no -proxy or -connect)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Accept public REST requests (default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Active Masternode not initialized."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Add a node to connect to and attempt to keep the connection open"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Adding Wrapped Serials supply..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Allow DNS lookups for -addnode, -seednode and -connect"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Allows deprecated RPC method(s) to be used"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Always query for peer addresses via DNS lookup (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Append comment to the user agent string"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Attempt to force blockchain corruption recovery"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Attempt to recover private keys from a corrupt wallet.dat"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Automatically create Tor hidden service (default: %d)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Block creation options:"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Calculating missing accumulators..."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Can't generate a change-address key. Please call keypoolrefill first."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot create public spend input"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot downgrade wallet"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot resolve -bind address: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot resolve -externalip address: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot resolve -whitebind address: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot write default address"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "CoinSpend: Accumulator witness does not verify"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "CoinSpend: failed check"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Connect only to the specified node(s)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot resolve -%s address: '%s'"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Cannot upgrade to HD wallet (already running HD support). Version: %d"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Change index out of range"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Connect through SOCKS5 proxy"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Connect to a node to retrieve peer addresses, and disconnect"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Connection options:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Copyright (C) 2009-%i The Bitcoin Core Developers"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Copyright (C) 2014-%i The Dash Core Developers"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Copyright (C) 2015-%i The PIVX Core Developers"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Copyright (C) 2015-%i The AllForOneBusiness Core Developers"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Could not parse masternode.conf"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Couldn't generate the accumulator witness"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Debugging/Testing options:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Delete blockchain folders and resync from scratch"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Disable OS notifications for incoming transactions (default: %u)"),
@@ -296,8 +286,6 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Display verbose coin stake messages
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Do not load the wallet and disable wallet RPC calls"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Do you want to rebuild the block database now?"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Done loading"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Enable automatic Zerocoin minting (0-1, default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Enable precomputation of zAFO spends and stakes (0-1, default %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Enable publish hash block in <address>"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Enable publish hash transaction (locked via SwiftX) in <address>"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Enable publish hash transaction in <address>"),
@@ -314,26 +302,27 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Error loading wallet.dat: Wallet co
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error loading wallet.dat: Wallet requires newer version of AllForOneBusiness Core"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error opening block database"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error reading from database, shutting down."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Error recovering public key."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error writing zerocoinDB to disk"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: "),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: -listen must be true if -masternode is set."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: -maxmempool must be at least %d MB"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: A fatal internal error occured, see debug.log for details"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: A fatal internal error occurred, see debug.log for details"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: Disk space is low!"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: Invalid port %d for running a masternode."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: No valid utxo!"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: Unsupported argument -tor found, use -onion."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Error: Wallet locked, unable to create transaction!"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to calculate accumulator checkpoint"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to create mint"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to accept tx in the memory pool (reason: %s)\n"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to find Zerocoins in wallet.dat"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to listen on any port. Use -listen=0 if you want this."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to parse host:port string"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to parse public spend"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to read block"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to select a zerocoin"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to wipe zerocoinDB"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Failed to write coin serial number into wallet"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Fee (in AFO/kB) to add to transactions you send (default: %s)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Fee (in %s/kB) to add to transactions you send (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Force safe mode (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Generate coins (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "How many blocks to check at startup (default: %u, 0 = all)"),
@@ -346,50 +335,54 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Information"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Initialization sanity check failed. AllForOneBusiness Core is shutting down."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Insufficient funds"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Insufficient funds."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid -masternodeaddr address: %s"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid -masternodeaddr port %d, only %d is supported on %s-net."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid -onion address or hostname: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -maxtxfee=<amount>: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -minrelaytxfee=<amount>: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -mintxfee=<amount>: '%s'"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -%s=<amount>: '%s'"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -paytxfee=<amount>: '%s' (must be at least %s)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -paytxfee=<amount>: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount for -reservebalance=<amount>"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid amount"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid masternodeprivkey. Please see documenation."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid netmask specified in -whitelist: '%s'"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid port detected in masternode.conf"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid private key."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid port %d detected in masternode.conf"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Invalid status error."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Keep at most <n> unconnectable transactions in memory (default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Limit size of signature cache to <n> entries (default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Keep the transaction memory pool below <n> megabytes (default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Keypool ran out, please call keypoolrefill first, or unlock the wallet."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Limit size of signature cache to <n> MiB (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Line: %d"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Listen for JSON-RPC connections on <port> (default: %u or testnet: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Listen for connections on <port> (default: %u or testnet: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading addresses..."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading banlist..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading block index..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading budget cache..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading masternode cache..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading masternode payment cache..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading sporks..."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading wallet... (%3.2f %%)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Loading wallet..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Location of the auth cookie (default: data dir)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Lock masternodes from masternode configuration file (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Lookup(): Invalid -proxy address or hostname: '%s'"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "MNs synchronization pending..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Maintain at most <n> connections to peers (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Masternode options:"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Masternodes are required to run on port %d for %s-net"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Maximum per-connection receive buffer, <n>*1000 bytes (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Maximum per-connection send buffer, <n>*1000 bytes (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Mint did not make it into blockchain"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Need address because change is not exact"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Need destination or change address because change is not exact"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Need to specify a port with -whitebind: '%s'"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "No error"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Node relay options:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Not enough file descriptors available."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Number of automatic wallet backups (default: 10)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Number of custom location backups to retain (default: %d)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "On first run, create a legacy wallet instead of a HD wallet"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Only accept block chain matching built-in checkpoints (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Only connect to nodes in network <net> (ipv4, ipv6 or onion)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Options:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Password for JSON-RPC connections"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Percentage of automatically minted Zerocoin  (1-100, default: %u)"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Peers are being disconnected due time differences."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Preparing for resync..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Prepend debug output with timestamp (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Print version and exit"),
@@ -399,11 +392,7 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Randomly drop 1 of every <n> networ
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Randomly fuzz 1 of every <n> network messages"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Rebuild block chain index from current blk000??.dat files"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Recalculating AFO supply..."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Recalculating minted ZAFO..."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Recalculating spent ZAFO..."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Receive and display P2P network alerts (default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Reindex the AFO and zAFO money supply statistics"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Reindex the accumulator database"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Reindex the %s and z%s money supply statistics"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Reindexing zerocoin database..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Reindexing zerocoin failed"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Relay and mine data carrier transactions (default: %u)"),
@@ -416,7 +405,6 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Run a thread to flush wallet period
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Run in the background as a daemon and accept commands"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Selected coins value is less than payment target"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Send transactions as zero-fee transactions if possible (default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Session timed out."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Set database cache size in megabytes (%d to %d, default: %d)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Set external address:port to get to this masternode (example: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Set key pool size to <n> (default: %u)"),
@@ -428,8 +416,6 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Set the number of threads to servic
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Sets the DB_PRIVATE flag in the wallet db environment (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Show all debugging options (usage: --help -help-debug)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Shrink debug.log file on client startup (default: 1 when no -debug)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Signing failed."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Signing timed out."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Signing transaction failed"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Specify configuration file (default: %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Specify connection timeout in milliseconds (minimum: 1, default: %d)"),
@@ -442,21 +428,20 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Spend Valid"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Spend unconfirmed change when sending transactions (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Staking options:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Stop running after importing blocks from disk (default: %u)"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Support the zerocoin light node protocol (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "SwiftX options:"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronization failed"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronization finished"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronization pending..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronizing budgets..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronizing masternode winners..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronizing masternodes..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Synchronizing sporks..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Syncing zAFO wallet..."),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "The coin spend has been used"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "The transaction did not verify"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "The threshold value cannot be less than %s"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "This help message"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "This is experimental software."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "This is intended for regression testing tools and app development."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "This is not a masternode. 'local' option disabled."),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "This is not a masternode."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Threshold for disconnecting misbehaving peers (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Too many spends needed"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Tor control port password (default: empty)"),
@@ -465,15 +450,19 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction Created"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction Mint Started"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction amount too small"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction amounts must be positive"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction canceled."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction too large for fee policy"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Transaction too large"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Trying to spend an already spent serial #, try again."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to bind to %s on this computer (bind returned error %s)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to find transaction containing mint %s"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to find transaction containing mint, txHash: %s"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to generate initial key"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to generate keys"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to sign spork message, wrong key?"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Unable to start HTTP server. See debug log for details."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Unknown network specified in -onlynet: '%s'"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Unsupported logging category %s=%s."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Upgrade wallet to latest format"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Use UPnP to map the listening port (default: %u)"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Use UPnP to map the listening port (default: 1 when listening)"),
@@ -497,8 +486,8 @@ QT_TRANSLATE_NOOP("allforonebusiness-core", "You don't have enough Zerocoins in 
 QT_TRANSLATE_NOOP("allforonebusiness-core", "You need to rebuild the database using -reindex to change -txindex"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Zapping all transactions from wallet..."),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "ZeroMQ notification options:"),
+QT_TRANSLATE_NOOP("allforonebusiness-core", "Zerocoin minting available only on regtest"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "Zerocoin options:"),
-QT_TRANSLATE_NOOP("allforonebusiness-core", "could not get lock on cs_spendcache"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "isValid(): Invalid -proxy address or hostname: '%s'"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "on startup"),
 QT_TRANSLATE_NOOP("allforonebusiness-core", "wallet.dat corrupt, salvage failed"),

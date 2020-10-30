@@ -1,5 +1,6 @@
 // Copyright (c) 2014 The Bitcoin developers
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2020 The PIVX developers
+// Copyright (c) 2020 The AllForOneBusiness developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +12,7 @@
 
 /**
  * CBaseChainParams defines the base parameters (shared between allforonebusiness-cli and allforonebusinessd)
- * of a given instance of the AllForOneBusiness system.
+ * of a given instance of the Pivx system.
  */
 class CBaseChainParams
 {
@@ -20,7 +21,6 @@ public:
         MAIN,
         TESTNET,
         REGTEST,
-        UNITTEST,
 
         MAX_NETWORK_TYPES
     };
@@ -41,6 +41,11 @@ protected:
  * outside of the unit tests.
  */
 const CBaseChainParams& BaseParams();
+
+/**
+ * Return parameters for the given network.
+ */
+CBaseChainParams& BaseParams(CBaseChainParams::Network network);
 
 /** Sets the params returned by Params() to those for the given network. */
 void SelectBaseParams(CBaseChainParams::Network network);

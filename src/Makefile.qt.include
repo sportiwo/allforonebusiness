@@ -6,121 +6,154 @@ bin_PROGRAMS += qt/allforonebusiness-qt
 EXTRA_LIBRARIES += qt/libbitcoinqt.a
 
 # allforonebusiness qt core #
-QT_TS = \
-  qt/locale/allforonebusiness_bg.ts \
-  qt/locale/allforonebusiness_ca.ts \
-  qt/locale/allforonebusiness_cs.ts \
-  qt/locale/allforonebusiness_da.ts \
-  qt/locale/allforonebusiness_de.ts \
-  qt/locale/allforonebusiness_en.ts \
-  qt/locale/allforonebusiness_en_GB.ts \
-  qt/locale/allforonebusiness_en_US.ts \
-  qt/locale/allforonebusiness_eo.ts \
-  qt/locale/allforonebusiness_es.ts \
-  qt/locale/allforonebusiness_es_ES.ts \
-  qt/locale/allforonebusiness_fi.ts \
-  qt/locale/allforonebusiness_fr_FR.ts \
-  qt/locale/allforonebusiness_hi_IN.ts \
-  qt/locale/allforonebusiness_hr.ts \
-  qt/locale/allforonebusiness_hr_HR.ts \
-  qt/locale/allforonebusiness_it.ts \
-  qt/locale/allforonebusiness_ja.ts \
-  qt/locale/allforonebusiness_ko_KR.ts \
-  qt/locale/allforonebusiness_lt_LT.ts \
-  qt/locale/allforonebusiness_nl.ts \
-  qt/locale/allforonebusiness_pl.ts \
-  qt/locale/allforonebusiness_pt.ts \
-  qt/locale/allforonebusiness_pt_BR.ts \
-  qt/locale/allforonebusiness_ro_RO.ts \
-  qt/locale/allforonebusiness_ru.ts \
-  qt/locale/allforonebusiness_sk.ts \
-  qt/locale/allforonebusiness_sv.ts \
-  qt/locale/allforonebusiness_tr.ts \
-  qt/locale/allforonebusiness_uk.ts \
-  qt/locale/allforonebusiness_vi.ts \
-  qt/locale/allforonebusiness_zh_CN.ts \
-  qt/locale/allforonebusiness_zh_TW.ts
+include Makefile.qt_locale.include
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/askpassphrasedialog.ui \
-  qt/forms/bip38tooldialog.ui \
   qt/forms/coincontroldialog.ui \
-  qt/forms/blockexplorer.ui \
   qt/forms/editaddressdialog.ui \
-  qt/forms/governancepage.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
-  qt/forms/masternodelist.ui \
-  qt/forms/multisenddialog.ui \
-  qt/forms/multisigdialog.ui\
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
-  qt/forms/overviewpage.ui \
-  qt/forms/receivecoinsdialog.ui \
-  qt/forms/privacydialog.ui \
-  qt/forms/receiverequestdialog.ui \
   qt/forms/rpcconsole.ui \
-  qt/forms/sendcoinsdialog.ui \
-  qt/forms/sendcoinsentry.ui \
-  qt/forms/signverifymessagedialog.ui \
-  qt/forms/transactiondescdialog.ui \
-  qt/forms/zafocontroldialog.ui
+  qt/allforonebusiness/forms/loadingdialog.ui \
+  qt/allforonebusiness/forms/snackbar.ui \
+  qt/allforonebusiness/forms/navmenuwidget.ui \
+  qt/allforonebusiness/forms/lockunlock.ui \
+  qt/allforonebusiness/forms/expandablebutton.ui \
+  qt/allforonebusiness/forms/receivedialog.ui \
+  qt/allforonebusiness/forms/topbar.ui \
+  qt/allforonebusiness/forms/txrow.ui \
+  qt/allforonebusiness/forms/dashboardwidget.ui \
+  qt/allforonebusiness/forms/addresslabelrow.ui \
+  qt/allforonebusiness/forms/contactdropdownrow.ui \
+  qt/allforonebusiness/forms/mninfodialog.ui \
+  qt/allforonebusiness/forms/optionbutton.ui \
+  qt/allforonebusiness/forms/masternodewizarddialog.ui \
+  qt/allforonebusiness/forms/mnrow.ui \
+  qt/allforonebusiness/forms/masternodeswidget.ui \
+  qt/allforonebusiness/forms/myaddressrow.ui \
+  qt/allforonebusiness/forms/csrow.ui \
+  qt/allforonebusiness/forms/sendchangeaddressdialog.ui \
+  qt/allforonebusiness/forms/sendconfirmdialog.ui \
+  qt/allforonebusiness/forms/sendcustomfeedialog.ui \
+  qt/allforonebusiness/forms/sendchangeaddressdialog.ui \
+  qt/allforonebusiness/forms/sendmultirow.ui \
+  qt/allforonebusiness/forms/send.ui \
+  qt/allforonebusiness/forms/addnewaddressdialog.ui \
+  qt/allforonebusiness/forms/addnewcontactdialog.ui \
+  qt/allforonebusiness/forms/requestdialog.ui \
+  qt/allforonebusiness/forms/receivewidget.ui \
+  qt/allforonebusiness/forms/tooltipmenu.ui \
+  qt/allforonebusiness/forms/addresseswidget.ui \
+  qt/allforonebusiness/forms/defaultdialog.ui \
+  qt/allforonebusiness/forms/coldstakingwidget.ui \
+  qt/allforonebusiness/settings/forms/settingsbackupwallet.ui \
+  qt/allforonebusiness/settings/forms/settingsexportcsv.ui \
+  qt/allforonebusiness/settings/forms/settingsbittoolwidget.ui \
+  qt/allforonebusiness/settings/forms/settingsconsolewidget.ui \
+  qt/allforonebusiness/settings/forms/settingsdisplayoptionswidget.ui \
+  qt/allforonebusiness/settings/forms/settingsfaqwidget.ui \
+  qt/allforonebusiness/settings/forms/settingsinformationwidget.ui \
+  qt/allforonebusiness/settings/forms/settingsmainoptionswidget.ui \
+  qt/allforonebusiness/settings/forms/settingsmultisenddialog.ui \
+  qt/allforonebusiness/settings/forms/settingsmultisendwidget.ui \
+  qt/allforonebusiness/settings/forms/settingssignmessagewidgets.ui \
+  qt/allforonebusiness/settings/forms/settingswalletoptionswidget.ui \
+  qt/allforonebusiness/settings/forms/settingswalletrepairwidget.ui \
+  qt/allforonebusiness/settings/forms/settingswidget.ui \
+  qt/allforonebusiness/forms/welcomecontentwidget.ui \
+  qt/allforonebusiness/forms/splash.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
   qt/moc_bantablemodel.cpp \
-  qt/moc_bip38tooldialog.cpp \
   qt/moc_bitcoinaddressvalidator.cpp \
-  qt/moc_bitcoinamountfield.cpp \
-  qt/moc_bitcoingui.cpp \
+  qt/allforonebusiness/moc_allforonebusinessgui.cpp \
   qt/moc_bitcoinunits.cpp \
-  qt/moc_blockexplorer.cpp \
   qt/moc_clientmodel.cpp \
   qt/moc_coincontroldialog.cpp \
   qt/moc_coincontroltreewidget.cpp \
   qt/moc_csvmodelwriter.cpp \
   qt/moc_editaddressdialog.cpp \
-  qt/moc_governancepage.cpp \
   qt/moc_guiutil.cpp \
   qt/moc_intro.cpp \
   qt/moc_macdockiconhandler.cpp \
   qt/moc_macnotificationhandler.cpp \
-  qt/moc_masternodelist.cpp \
-  qt/moc_multisenddialog.cpp \
-  qt/moc_multisigdialog.cpp\
   qt/moc_notificator.cpp \
   qt/moc_openuridialog.cpp \
   qt/moc_optionsdialog.cpp \
   qt/moc_optionsmodel.cpp \
-  qt/moc_overviewpage.cpp \
   qt/moc_peertablemodel.cpp \
   qt/moc_paymentserver.cpp \
   qt/moc_qvalidatedlineedit.cpp \
   qt/moc_qvaluecombobox.cpp \
-  qt/moc_receivecoinsdialog.cpp \
-  qt/moc_privacydialog.cpp \
-  qt/moc_proposalframe.cpp \
-  qt/moc_receiverequestdialog.cpp \
   qt/moc_recentrequeststablemodel.cpp \
   qt/moc_rpcconsole.cpp \
-  qt/moc_sendcoinsdialog.cpp \
-  qt/moc_sendcoinsentry.cpp \
-  qt/moc_signverifymessagedialog.cpp \
-  qt/moc_splashscreen.cpp \
   qt/moc_trafficgraphwidget.cpp \
-  qt/moc_transactiondesc.cpp \
-  qt/moc_transactiondescdialog.cpp \
   qt/moc_transactionfilterproxy.cpp \
   qt/moc_transactiontablemodel.cpp \
-  qt/moc_transactionview.cpp \
   qt/moc_utilitydialog.cpp \
-  qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
-  qt/moc_walletview.cpp \
-  qt/moc_zafocontroldialog.cpp
+  qt/allforonebusiness/moc_loadingdialog.cpp \
+  qt/allforonebusiness/moc_pwidget.cpp \
+  qt/allforonebusiness/moc_focuseddialog.cpp \
+  qt/allforonebusiness/moc_snackbar.cpp \
+  qt/allforonebusiness/moc_navmenuwidget.cpp \
+  qt/allforonebusiness/moc_lockunlock.cpp \
+  qt/allforonebusiness/moc_expandablebutton.cpp \
+  qt/allforonebusiness/moc_furabstractlistitemdelegate.cpp \
+  qt/allforonebusiness/moc_receivedialog.cpp \
+  qt/allforonebusiness/moc_pfborderimage.cpp \
+  qt/allforonebusiness/moc_topbar.cpp \
+  qt/allforonebusiness/moc_txrow.cpp \
+  qt/allforonebusiness/moc_dashboardwidget.cpp \
+  qt/allforonebusiness/moc_addresslabelrow.cpp \
+  qt/allforonebusiness/moc_contactdropdownrow.cpp \
+  qt/allforonebusiness/moc_mninfodialog.cpp \
+  qt/allforonebusiness/moc_optionbutton.cpp \
+  qt/allforonebusiness/moc_coldstakingmodel.cpp \
+  qt/allforonebusiness/moc_mnmodel.cpp \
+  qt/allforonebusiness/moc_masternodewizarddialog.cpp \
+  qt/allforonebusiness/moc_mnrow.cpp \
+  qt/allforonebusiness/moc_masternodeswidget.cpp \
+  qt/allforonebusiness/moc_myaddressrow.cpp \
+  qt/allforonebusiness/moc_csrow.cpp \
+  qt/allforonebusiness/moc_contactsdropdown.cpp \
+  qt/allforonebusiness/moc_sendchangeaddressdialog.cpp \
+  qt/allforonebusiness/moc_sendconfirmdialog.cpp \
+  qt/allforonebusiness/moc_sendcustomfeedialog.cpp \
+  qt/allforonebusiness/moc_sendchangeaddressdialog.cpp \
+  qt/allforonebusiness/moc_sendmultirow.cpp \
+  qt/allforonebusiness/moc_send.cpp \
+  qt/allforonebusiness/moc_addnewaddressdialog.cpp \
+  qt/allforonebusiness/moc_addnewcontactdialog.cpp \
+  qt/allforonebusiness/moc_requestdialog.cpp \
+  qt/allforonebusiness/moc_receivewidget.cpp \
+  qt/allforonebusiness/moc_tooltipmenu.cpp \
+  qt/allforonebusiness/moc_addresseswidget.cpp \
+  qt/allforonebusiness/moc_defaultdialog.cpp \
+  qt/allforonebusiness/moc_coldstakingwidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsbackupwallet.cpp \
+  qt/allforonebusiness/settings/moc_settingsexportcsv.cpp \
+  qt/allforonebusiness/settings/moc_settingsbittoolwidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsconsolewidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsdisplayoptionswidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsfaqwidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsinformationwidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsmainoptionswidget.cpp \
+  qt/allforonebusiness/settings/moc_settingsmultisenddialog.cpp \
+  qt/allforonebusiness/settings/moc_settingsmultisendwidget.cpp \
+  qt/allforonebusiness/settings/moc_settingssignmessagewidgets.cpp \
+  qt/allforonebusiness/settings/moc_settingswalletoptionswidget.cpp \
+  qt/allforonebusiness/settings/moc_settingswalletrepairwidget.cpp \
+  qt/allforonebusiness/settings/moc_settingswidget.cpp \
+  qt/allforonebusiness/moc_welcomecontentwidget.cpp \
+  qt/allforonebusiness/moc_splash.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -128,10 +161,9 @@ BITCOIN_MM = \
 
 QT_MOC = \
   qt/allforonebusiness.moc \
-  qt/bitcoinamountfield.moc \
   qt/intro.moc \
-  qt/overviewpage.moc \
-  qt/rpcconsole.moc
+  qt/rpcconsole.moc \
+  qt/allforonebusiness/settings/moc_settingsconsolewidget.cpp
 
 QT_QRC_CPP = qt/qrc_allforonebusiness.cpp
 QT_QRC = qt/allforonebusiness.qrc
@@ -147,145 +179,333 @@ BITCOIN_QT_H = \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
-  qt/bip38tooldialog.h \
   qt/bitcoinaddressvalidator.h \
-  qt/bitcoinamountfield.h \
-  qt/bitcoingui.h \
+  qt/allforonebusiness/allforonebusinessgui.h \
   qt/bitcoinunits.h \
-  qt/blockexplorer.h \
   qt/clientmodel.h \
   qt/coincontroldialog.h \
   qt/coincontroltreewidget.h \
   qt/csvmodelwriter.h \
   qt/editaddressdialog.h \
-  qt/governancepage.h \
   qt/guiconstants.h \
   qt/guiutil.h \
   qt/intro.h \
   qt/macdockiconhandler.h \
   qt/macnotificationhandler.h \
-  qt/masternodelist.h \
-  qt/multisenddialog.h \
-  qt/multisigdialog.h\
   qt/networkstyle.h \
   qt/notificator.h \
   qt/openuridialog.h \
   qt/optionsdialog.h \
   qt/optionsmodel.h \
-  qt/overviewpage.h \
   qt/paymentrequestplus.h \
   qt/paymentserver.h \
   qt/peertablemodel.h \
   qt/platformstyle.h \
-  qt/proposalframe.h \
   qt/qvalidatedlineedit.h \
   qt/qvaluecombobox.h \
-  qt/receivecoinsdialog.h \
-  qt/privacydialog.h \
-  qt/receiverequestdialog.h \
   qt/recentrequeststablemodel.h \
   qt/rpcconsole.h \
-  qt/sendcoinsdialog.h \
-  qt/sendcoinsentry.h \
-  qt/signverifymessagedialog.h \
-  qt/splashscreen.h \
   qt/trafficgraphwidget.h \
-  qt/transactiondesc.h \
-  qt/transactiondescdialog.h \
   qt/transactionfilterproxy.h \
   qt/transactionrecord.h \
   qt/transactiontablemodel.h \
-  qt/transactionview.h \
   qt/utilitydialog.h \
-  qt/walletframe.h \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
-  qt/walletview.h \
+  qt/allforonebusiness/prunnable.h \
+  qt/allforonebusiness/pfborderimage.h \
+  qt/allforonebusiness/loadingdialog.h \
   qt/winshutdownmonitor.h \
-  qt/zafocontroldialog.h
+  qt/allforonebusiness/pwidget.h \
+  qt/allforonebusiness/focuseddialog.h \
+  qt/allforonebusiness/guitransactionsutils.h \
+  qt/allforonebusiness/snackbar.h \
+  qt/allforonebusiness/navmenuwidget.h \
+  qt/allforonebusiness/lockunlock.h \
+  qt/allforonebusiness/receivedialog.h \
+  qt/allforonebusiness/furlistrow.h \
+  qt/allforonebusiness/furabstractlistitemdelegate.h \
+  qt/allforonebusiness/txviewholder.h \
+  qt/allforonebusiness/qtutils.h \
+  qt/allforonebusiness/expandablebutton.h \
+  qt/allforonebusiness/topbar.h \
+  qt/allforonebusiness/txrow.h \
+  qt/allforonebusiness/addressholder.h \
+  qt/allforonebusiness/addressfilterproxymodel.h \
+  qt/allforonebusiness/dashboardwidget.h \
+  qt/allforonebusiness/addresslabelrow.h \
+  qt/allforonebusiness/contactdropdownrow.h \
+  qt/allforonebusiness/mninfodialog.h \
+  qt/allforonebusiness/optionbutton.h \
+  qt/allforonebusiness/coldstakingmodel.h \
+  qt/allforonebusiness/mnmodel.h \
+  qt/allforonebusiness/masternodewizarddialog.h \
+  qt/allforonebusiness/mnrow.h \
+  qt/allforonebusiness/masternodeswidget.h \
+  qt/allforonebusiness/myaddressrow.h \
+  qt/allforonebusiness/csrow.h \
+  qt/allforonebusiness/contactsdropdown.h \
+  qt/allforonebusiness/sendchangeaddressdialog.h \
+  qt/allforonebusiness/sendconfirmdialog.h \
+  qt/allforonebusiness/sendcustomfeedialog.h \
+  qt/allforonebusiness/sendchangeaddressdialog.h \
+  qt/allforonebusiness/sendmultirow.h \
+  qt/allforonebusiness/send.h \
+  qt/allforonebusiness/addnewaddressdialog.h \
+  qt/allforonebusiness/addnewcontactdialog.h \
+  qt/allforonebusiness/requestdialog.h \
+  qt/allforonebusiness/receivewidget.h \
+  qt/allforonebusiness/tooltipmenu.h \
+  qt/allforonebusiness/addresseswidget.h \
+  qt/allforonebusiness/defaultdialog.h \
+  qt/allforonebusiness/coldstakingwidget.h \
+  qt/allforonebusiness/settings/settingsbackupwallet.h \
+  qt/allforonebusiness/settings/settingsexportcsv.h \
+  qt/allforonebusiness/settings/settingsbittoolwidget.h \
+  qt/allforonebusiness/settings/settingsconsolewidget.h \
+  qt/allforonebusiness/settings/settingsdisplayoptionswidget.h \
+  qt/allforonebusiness/settings/settingsfaqwidget.h \
+  qt/allforonebusiness/settings/settingsinformationwidget.h \
+  qt/allforonebusiness/settings/settingsmainoptionswidget.h \
+  qt/allforonebusiness/settings/settingsmultisenddialog.h \
+  qt/allforonebusiness/settings/settingsmultisendwidget.h \
+  qt/allforonebusiness/settings/settingssignmessagewidgets.h \
+  qt/allforonebusiness/settings/settingswalletoptionswidget.h \
+  qt/allforonebusiness/settings/settingswalletrepairwidget.h \
+  qt/allforonebusiness/settings/settingswidget.h \
+  qt/allforonebusiness/welcomecontentwidget.h \
+  qt/allforonebusiness/splash.h
 
 RES_ICONS = \
-  qt/res/icons/add.png \
-  qt/res/icons/address-book.png \
-  qt/res/icons/automint_active.png \
-  qt/res/icons/automint_inactive.png \
   qt/res/icons/bitcoin.ico \
   qt/res/icons/bitcoin.png \
   qt/res/icons/bitcoin_testnet.ico \
   qt/res/icons/bitcoin_testnet.png \
   qt/res/icons/bitcoin_regtest.png \
-  qt/res/icons/browse.png \
-  qt/res/icons/clock1.png \
-  qt/res/icons/clock2.png \
-  qt/res/icons/clock3.png \
-  qt/res/icons/clock4.png \
-  qt/res/icons/clock5.png \
-  qt/res/icons/configure.png \
-  qt/res/icons/connect0_16.png \
-  qt/res/icons/connect1_16.png \
-  qt/res/icons/connect2_16.png \
-  qt/res/icons/connect3_16.png \
-  qt/res/icons/connect4_16.png \
-  qt/res/icons/debugwindow.png \
-  qt/res/icons/edit.png \
-  qt/res/icons/editcopy.png \
-  qt/res/icons/editpaste.png \
-  qt/res/icons/explorer.png \
-  qt/res/icons/export.png \
-  qt/res/icons/eye.png \
-  qt/res/icons/eye_minus.png \
-  qt/res/icons/eye_plus.png \
-  qt/res/icons/filesave.png \
-  qt/res/icons/history.png \
-  qt/res/icons/key.png \
   qt/res/icons/lock_closed.png \
   qt/res/icons/lock_open.png \
-  qt/res/icons/masternodes.png \
-  qt/res/icons/onion.png \
   qt/res/icons/overview.png \
-  qt/res/icons/qrcode.png \
-  qt/res/icons/quit.png \
-  qt/res/icons/receive.png \
-  qt/res/icons/receive_dark.png \
-  qt/res/icons/privacy.png \
-  qt/res/icons/remove.png \
-  qt/res/icons/send.png \
-  qt/res/icons/send_dark.png \
-  qt/res/icons/governance.png \
-  qt/res/icons/governance_dark.png \
-  qt/res/icons/staking_active.png \
-  qt/res/icons/staking_inactive.png \
-  qt/res/icons/synced.png \
-  qt/res/icons/trade.png \
-  qt/res/icons/transaction0.png \
-  qt/res/icons/transaction2.png \
-  qt/res/icons/transaction_conflicted.png \
-  qt/res/icons/tx_inout.png \
-  qt/res/icons/tx_input.png \
-  qt/res/icons/tx_output.png \
-  qt/res/icons/tx_mined.png \
-  qt/res/icons/unit_allforonebusiness.png \
-  qt/res/icons/unit_mallforonebusiness.png \
-  qt/res/icons/unit_uallforonebusiness.png \
-  qt/res/icons/unit_tallforonebusiness.png \
-  qt/res/icons/unit_tmallforonebusiness.png \
-  qt/res/icons/unit_tuallforonebusiness.png \
-  qt/res/icons/yesvote.png \
-  qt/res/icons/novote.png \
-  qt/res/icons/abstainvote.png
+  qt/res/icons/ic-transaction-received.svg \
+  qt/res/icons/ic-transaction-mint.svg \
+  qt/res/icons/ic-transaction-sent.svg \
+  qt/res/icons/ic-transaction-staked.svg \
+  qt/allforonebusiness/res/img/bg-dashboard-banner.png \
+  qt/allforonebusiness/res/img/bg-multi-number-dark.svg \
+  qt/allforonebusiness/res/img/ic-check-locked.svg \
+  qt/allforonebusiness/res/img/ic-nav-address.svg \
+  qt/allforonebusiness/res/img/ic-update.svg \
+  qt/allforonebusiness/res/img/bg-multi-number.svg \
+  qt/allforonebusiness/res/img/ic-check-mint-off.svg \
+  qt/allforonebusiness/res/img/ic-nav-cold-staking.svg \
+  qt/allforonebusiness/res/img/ic-nav-cold-staking-active.svg \
+  qt/allforonebusiness/res/img/ic-nav-dashboard-active.svg \
+  qt/allforonebusiness/res/img/ic-wallet-status-locked.svg \
+  qt/allforonebusiness/res/img/bg-splash.svg \
+  qt/allforonebusiness/res/img/bg-splash.png \
+  qt/allforonebusiness/res/img/ic-check-mint.svg \
+  qt/allforonebusiness/res/img/ic-nav-dashboard-hover.svg \
+  qt/allforonebusiness/res/img/ic-wallet-status-staking.svg \
+  qt/allforonebusiness/res/img/ic-check-peers-off.svg \
+  qt/allforonebusiness/res/img/ic-nav-dashboard.svg \
+  qt/allforonebusiness/res/img/ic-wallet-status-unlocked.svg \
+  qt/allforonebusiness/res/img/ic-check-peers.svg \
+  qt/allforonebusiness/res/img/ic-nav-master-active.svg \
+  qt/allforonebusiness/res/img/ic-watch-password-white.svg \
+  qt/allforonebusiness/res/img/bg-welcome-container.jpg \
+  qt/allforonebusiness/res/img/bg-welcome-container.png \
+  qt/allforonebusiness/res/img/bg-welcome-container.svg \
+  qt/allforonebusiness/res/img/bg-welcome-container@2x.png \
+  qt/allforonebusiness/res/img/bg-welcome-container@3x.png \
+  qt/allforonebusiness/res/img/ic-check-staking-off.svg \
+  qt/allforonebusiness/res/img/ic-nav-master-hover.svg \
+  qt/allforonebusiness/res/img/ic-watch-password.svg \
+  qt/allforonebusiness/res/img/bg-welcome.jpg \
+  qt/allforonebusiness/res/img/bg-welcome.svg \
+  qt/allforonebusiness/res/img/bg-welcome@2x.jpg \
+  qt/allforonebusiness/res/img/bg-welcome@3x.jpg \
+  qt/allforonebusiness/res/img/bg-welcome.png \
+  qt/allforonebusiness/res/img/ic-check-staking.svg \
+  qt/allforonebusiness/res/img/ic-nav-master.svg \
+  qt/allforonebusiness/res/img/img-dashboard-banner.jpg \
+  qt/allforonebusiness/res/img/btn-radio-active.svg \
+  qt/allforonebusiness/res/img/ic-check-sync-off.svg \
+  qt/allforonebusiness/res/img/ic-nav-privacy-active.svg \
+  qt/allforonebusiness/res/img/img-empty-contacts.svg \
+  qt/allforonebusiness/res/img/btn-radio-off.svg \
+  qt/allforonebusiness/res/img/ic-check-sync.png \
+  qt/allforonebusiness/res/img/ic-nav-privacy-hover.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-contacts.svg \
+  qt/allforonebusiness/res/img/ic-contact-arrow-down.svg \
+  qt/allforonebusiness/res/img/ic-contact-arrow-down-white.svg \
+  qt/allforonebusiness/res/img/ic-check-sync.svg \
+  qt/allforonebusiness/res/img/ic-check-faq.svg \
+  qt/allforonebusiness/res/img/ic-nav-privacy.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-error.svg \
+  qt/allforonebusiness/res/img/ic-add-label.svg \
+  qt/allforonebusiness/res/img/ic-pending.svg \
+  qt/allforonebusiness/res/img/ic-check-theme-dark.svg \
+  qt/allforonebusiness/res/img/ic-nav-receive-active.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-masternode.svg \
+  qt/allforonebusiness/res/img/ic-add-liliac.svg \
+  qt/allforonebusiness/res/img/ic-check-theme-light.svg \
+  qt/allforonebusiness/res/img/ic-nav-receive-hover.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-multisend.svg \
+  qt/allforonebusiness/res/img/ic-add-purple.svg \
+  qt/allforonebusiness/res/img/ic-check-white.svg \
+  qt/allforonebusiness/res/img/ic-nav-receive.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-peers.svg \
+  qt/allforonebusiness/res/img/ic-add.svg \
+  qt/allforonebusiness/res/img/ic-check.svg \
+  qt/allforonebusiness/res/img/ic-nav-send-active.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-staking-off.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-staking-on.svg \
+  qt/allforonebusiness/res/img/ic-address-book-grey.svg \
+  qt/allforonebusiness/res/img/ic-chevron-left.svg \
+  qt/allforonebusiness/res/img/ic-nav-send-hover.svg \
+  qt/allforonebusiness/res/img/img-empty-dark-transactions.svg \
+  qt/allforonebusiness/res/img/ic-address-book-white.svg \
+  qt/allforonebusiness/res/img/ic-chevron-right.svg \
+  qt/allforonebusiness/res/img/ic-nav-send.svg \
+  qt/allforonebusiness/res/img/img-empty-error.svg \
+  qt/allforonebusiness/res/img/ic-address-book.svg \
+  qt/allforonebusiness/res/img/ic-clear-liliac.svg \
+  qt/allforonebusiness/res/img/ic-nav-settings-active.svg \
+  qt/allforonebusiness/res/img/img-empty-masternode.svg \
+  qt/allforonebusiness/res/img/ic-address-send-white.svg \
+  qt/allforonebusiness/res/img/ic-clear-purple.svg \
+  qt/allforonebusiness/res/img/ic-nav-settings-hover.svg \
+  qt/allforonebusiness/res/img/img-empty-multisend.svg \
+  qt/allforonebusiness/res/img/ic-address-send.svg \
+  qt/allforonebusiness/res/img/ic-close-white.svg \
+  qt/allforonebusiness/res/img/ic-nav-settings.svg \
+  qt/allforonebusiness/res/img/img-empty-peers.svg \
+  qt/allforonebusiness/res/img/img-empty-privacy.svg \
+  qt/allforonebusiness/res/img/img-empty-privacy-dark.svg \
+  qt/allforonebusiness/res/img/ic-arrow-drop-down-white.svg \
+  qt/allforonebusiness/res/img/ic-close.svg \
+  qt/allforonebusiness/res/img/ic-radio-liliac-on.svg \
+  qt/allforonebusiness/res/img/img-empty-staking-off.svg \
+  qt/allforonebusiness/res/img/ic-arrow-drop-down.svg \
+  qt/allforonebusiness/res/img/ic-coin-afo.svg \
+  qt/allforonebusiness/res/img/ic-receive-off.svg \
+  qt/allforonebusiness/res/img/img-empty-staking-on.svg \
+  qt/allforonebusiness/res/img/ic-arrow-drop-up-white.svg \
+  qt/allforonebusiness/res/img/ic-coin-zafo.png \
+  qt/allforonebusiness/res/img/ic-receive-on.svg \
+  qt/allforonebusiness/res/img/img-empty-transactions.svg \
+  qt/allforonebusiness/res/img/ic-arrow-drop-up.svg \
+  qt/allforonebusiness/res/img/ic-coin-zafo.svg \
+  qt/allforonebusiness/res/img/ic-received.svg \
+  qt/allforonebusiness/res/img/img-logo-allforonebusiness.png \
+  qt/allforonebusiness/res/img/ic-arrow-drop-white-down.svg \
+  qt/allforonebusiness/res/img/ic-combo-box.svg \
+  qt/allforonebusiness/res/img/ic-send.svg \
+  qt/allforonebusiness/res/img/img-logo-allforonebusiness@2x.png \
+  qt/allforonebusiness/res/img/ic-arrow-purple-down.svg \
+  qt/allforonebusiness/res/img/ic-connect.svg \
+  qt/allforonebusiness/res/img/ic-submenu-lock.svg \
+  qt/allforonebusiness/res/img/img-logo-allforonebusiness@3x.png \
+  qt/allforonebusiness/res/img/img-logo-allforonebusiness.svg \
+  qt/allforonebusiness/res/img/ic-arrow-right-white.svg \
+  qt/allforonebusiness/res/img/ic-arrow-left-white.svg \
+  qt/allforonebusiness/res/img/ic-arrow-left.svg \
+  qt/allforonebusiness/res/img/ic-copy-liliac.svg \
+  qt/allforonebusiness/res/img/ic-submenu-staking.svg \
+  qt/allforonebusiness/res/img/img-nav-logo-allforonebusiness.png \
+  qt/allforonebusiness/res/img/ic-arrow-right.svg \
+  qt/allforonebusiness/res/img/ic-copy.svg \
+  qt/allforonebusiness/res/img/ic-copy-big.svg \
+  qt/allforonebusiness/res/img/ic-copy-big-white.svg \
+  qt/allforonebusiness/res/img/ic-submenu-unlock.svg \
+  qt/allforonebusiness/res/img/img-nav-logo.png \
+  qt/allforonebusiness/res/img/ic-arrow-white-left.svg \
+  qt/allforonebusiness/res/img/ic-exit.svg \
+  qt/allforonebusiness/res/img/ic-switch-liliac-on.svg \
+  qt/allforonebusiness/res/img/img-nav-logo.svg \
+  qt/allforonebusiness/res/img/ic-arrow-white-right.svg \
+  qt/allforonebusiness/res/img/ic-expand.svg \
+  qt/allforonebusiness/res/img/ic-switch-off.svg \
+  qt/allforonebusiness/res/img/img-qr-test-big.png \
+  qt/allforonebusiness/res/img/ic-check-active.svg \
+  qt/allforonebusiness/res/img/ic-folder.svg \
+  qt/allforonebusiness/res/img/ic-switch-on.svg \
+  qt/allforonebusiness/res/img/img-qr-test.png \
+  qt/allforonebusiness/res/img/ic-check-box.svg \
+  qt/allforonebusiness/res/img/ic-check-box-dark-active.svg \
+  qt/allforonebusiness/res/img/ic-check-box-indeterminate.svg \
+  qt/allforonebusiness/res/img/ic-check-box-liliac-indeterminate.svg \
+  qt/allforonebusiness/res/img/ic-label-liliac.svg \
+  qt/allforonebusiness/res/img/ic-transaction-warning.svg \
+  qt/allforonebusiness/res/img/ic-transaction-mint.svg \
+  qt/allforonebusiness/res/img/ic-transaction-mint-inactive.svg \
+  qt/allforonebusiness/res/img/ic-check-cold-staking.svg \
+  qt/allforonebusiness/res/img/ic-check-cold-staking-off.svg \
+  qt/allforonebusiness/res/img/ic-check-cold-staking-enabled.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-cs-contract.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-cs-contract-inactive.svg \
+  qt/allforonebusiness/res/img/img-qr.svg \
+  qt/allforonebusiness/res/img/ic-check-connect-off.svg \
+  qt/allforonebusiness/res/img/ic-check-tor-off.svg \
+  qt/allforonebusiness/res/img/ic-check-tor.svg \
+  qt/allforonebusiness/res/img/ic-label.svg \
+  qt/allforonebusiness/res/img/ic-transaction-received.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-received.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-warning.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-mint.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-mint-inactive.svg \
+  qt/allforonebusiness/res/img/ic-transaction-received-inactive.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-received-inactive.svg \
+  qt/allforonebusiness/res/img/img-welcome-step1.png \
+  qt/allforonebusiness/res/img/ic-check-connect.svg \
+  qt/allforonebusiness/res/img/ic-menu-hover.svg \
+  qt/allforonebusiness/res/img/ic-transaction-sent.svg \
+  qt/allforonebusiness/res/img/ic-transaction-sent-inactive.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-sent.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-sent-inactive.svg \
+  qt/allforonebusiness/res/img/img-welcome-step2.png \
+  qt/allforonebusiness/res/img/ic-check-dark.svg \
+  qt/allforonebusiness/res/img/ic-mint.svg \
+  qt/allforonebusiness/res/img/ic-transaction-staked.svg \
+  qt/allforonebusiness/res/img/ic-transaction-staked-inactive.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-staked.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-staked-inactive.svg \
+  qt/allforonebusiness/res/img/img-welcome-step3.png \
+  qt/allforonebusiness/res/img/ic-check-liliac-on.svg \
+  qt/allforonebusiness/res/img/ic-nav-address-active.svg \
+  qt/allforonebusiness/res/img/ic-unlock-staking.svg \
+  qt/allforonebusiness/res/img/img-welcome-step4.png \
+  qt/allforonebusiness/res/img/ic-check-locked-off.svg \
+  qt/allforonebusiness/res/img/ic-nav-address-hover.svg \
+  qt/allforonebusiness/res/img/ic-update-liliac.svg \
+  qt/allforonebusiness/res/img/ic-arrow-drop-down-purple.svg \
+  qt/allforonebusiness/res/img/ic-arrow-drop-up-purple.svg \
+  qt/allforonebusiness/res/img/ic-check-liliac-indeterminate.svg \
+  qt/allforonebusiness/res/img/ic-check-box-liliac-indeterminate.svg \
+  qt/allforonebusiness/res/img/ic-transaction-stake-delegated.svg \
+  qt/allforonebusiness/res/img/ic-transaction-stake-delegated-inactive.svg \
+  qt/allforonebusiness/res/img/ic-transaction-stake-hot.svg \
+  qt/allforonebusiness/res/img/ic-transaction-stake-hot-inactive.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-stake-hot.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-stake-hot-inactive.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-stake-delegated.svg \
+  qt/allforonebusiness/res/img/dark/ic-transaction-stake-delegated-inactive.svg \
+  qt/allforonebusiness/res/img/ic-transaction-cs-contract.svg \
+  qt/allforonebusiness/res/img/ic-transaction-cs-contract-inactive.svg \
+  qt/allforonebusiness/res/img/ic-check-box-indeterminate.svg \
+  qt/allforonebusiness/res/img/ani-loading-dark.gif \
+  qt/allforonebusiness/res/img/ani-loading.gif
+
+
 
 BITCOIN_QT_BASE_CPP = \
   qt/bantablemodel.cpp \
   qt/bitcoinaddressvalidator.cpp \
-  qt/bitcoinamountfield.cpp \
-  qt/bitcoingui.cpp \
+  qt/allforonebusiness/allforonebusinessgui.cpp \
   qt/bitcoinunits.cpp \
-  qt/blockexplorer.cpp \
   qt/clientmodel.cpp \
   qt/csvmodelwriter.cpp \
   qt/guiutil.cpp \
   qt/intro.cpp \
-  qt/masternodelist.cpp \
   qt/networkstyle.cpp \
   qt/notificator.cpp \
   qt/optionsdialog.cpp \
@@ -295,7 +515,6 @@ BITCOIN_QT_BASE_CPP = \
   qt/qvalidatedlineedit.cpp \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
-  qt/splashscreen.cpp \
   qt/trafficgraphwidget.cpp \
   qt/utilitydialog.cpp
 
@@ -305,38 +524,78 @@ BITCOIN_QT_WALLET_CPP = \
   qt/addressbookpage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
-  qt/bip38tooldialog.cpp \
-  qt/blockexplorer.cpp \
   qt/coincontroldialog.cpp \
   qt/coincontroltreewidget.cpp \
   qt/editaddressdialog.cpp \
-  qt/governancepage.cpp \
-  qt/masternodelist.cpp \
-  qt/multisenddialog.cpp \
-  qt/multisigdialog.cpp\
   qt/openuridialog.cpp \
-  qt/overviewpage.cpp \
   qt/paymentrequestplus.cpp \
   qt/paymentserver.cpp \
-  qt/receivecoinsdialog.cpp \
-  qt/privacydialog.cpp \
-  qt/proposalframe.cpp \
-  qt/receiverequestdialog.cpp \
   qt/recentrequeststablemodel.cpp \
-  qt/sendcoinsdialog.cpp \
-  qt/sendcoinsentry.cpp \
-  qt/signverifymessagedialog.cpp \
-  qt/transactiondesc.cpp \
-  qt/transactiondescdialog.cpp \
   qt/transactionfilterproxy.cpp \
   qt/transactionrecord.cpp \
   qt/transactiontablemodel.cpp \
-  qt/transactionview.cpp \
-  qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
-  qt/walletview.cpp \
-  qt/zafocontroldialog.cpp
+  qt/allforonebusiness/loadingdialog.cpp \
+  qt/allforonebusiness/pwidget.cpp \
+  qt/allforonebusiness/focuseddialog.cpp \
+  qt/allforonebusiness/guitransactionsutils.cpp \
+  qt/allforonebusiness/snackbar.cpp \
+  qt/allforonebusiness/navmenuwidget.cpp \
+  qt/allforonebusiness/lockunlock.cpp \
+  qt/allforonebusiness/receivedialog.cpp \
+  qt/allforonebusiness/furabstractlistitemdelegate.cpp \
+  qt/allforonebusiness/txviewholder.cpp \
+  qt/allforonebusiness/qtutils.cpp \
+  qt/allforonebusiness/expandablebutton.cpp \
+  qt/allforonebusiness/topbar.cpp \
+  qt/allforonebusiness/txrow.cpp \
+  qt/allforonebusiness/addressholder.cpp \
+  qt/allforonebusiness/addressfilterproxymodel.cpp \
+  qt/allforonebusiness/dashboardwidget.cpp \
+  qt/allforonebusiness/addresslabelrow.cpp \
+  qt/allforonebusiness/contactdropdownrow.cpp \
+  qt/allforonebusiness/contactsdropdown.cpp \
+  qt/allforonebusiness/optionbutton.cpp \
+  qt/allforonebusiness/mninfodialog.cpp \
+  qt/allforonebusiness/coldstakingmodel.cpp \
+  qt/allforonebusiness/mnmodel.cpp \
+  qt/allforonebusiness/masternodewizarddialog.cpp \
+  qt/allforonebusiness/mnrow.cpp \
+  qt/allforonebusiness/masternodeswidget.cpp \
+  qt/allforonebusiness/myaddressrow.cpp \
+  qt/allforonebusiness/csrow.cpp \
+  qt/allforonebusiness/sendchangeaddressdialog.cpp \
+  qt/allforonebusiness/sendconfirmdialog.cpp \
+  qt/allforonebusiness/sendcustomfeedialog.cpp \
+  qt/allforonebusiness/sendchangeaddressdialog.cpp \
+  qt/allforonebusiness/sendmultirow.cpp \
+  qt/allforonebusiness/send.cpp \
+  qt/allforonebusiness/addnewaddressdialog.cpp \
+  qt/allforonebusiness/addnewcontactdialog.cpp \
+  qt/allforonebusiness/requestdialog.cpp \
+  qt/allforonebusiness/receivewidget.cpp \
+  qt/allforonebusiness/tooltipmenu.cpp \
+  qt/allforonebusiness/addresseswidget.cpp \
+  qt/allforonebusiness/defaultdialog.cpp \
+  qt/allforonebusiness/coldstakingwidget.cpp \
+  qt/allforonebusiness/settings/settingsbackupwallet.cpp \
+  qt/allforonebusiness/settings/settingsexportcsv.cpp \
+  qt/allforonebusiness/settings/settingsbittoolwidget.cpp \
+  qt/allforonebusiness/settings/settingsconsolewidget.cpp \
+  qt/allforonebusiness/settings/settingsdisplayoptionswidget.cpp \
+  qt/allforonebusiness/settings/settingsfaqwidget.cpp \
+  qt/allforonebusiness/settings/settingsinformationwidget.cpp \
+  qt/allforonebusiness/settings/settingsmainoptionswidget.cpp \
+  qt/allforonebusiness/settings/settingsmultisenddialog.cpp \
+  qt/allforonebusiness/settings/settingsmultisendwidget.cpp \
+  qt/allforonebusiness/settings/settingssignmessagewidgets.cpp \
+  qt/allforonebusiness/settings/settingswalletoptionswidget.cpp \
+  qt/allforonebusiness/settings/settingswalletrepairwidget.cpp \
+  qt/allforonebusiness/settings/settingswidget.cpp \
+  qt/allforonebusiness/welcomecontentwidget.cpp \
+  qt/allforonebusiness/splash.cpp
+
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
 if TARGET_WINDOWS
@@ -350,34 +609,25 @@ RES_IMAGES = \
   qt/res/images/about.png \
   qt/res/images/splash.png \
   qt/res/images/splash_testnet.png \
-  qt/res/images/splash_regtest.png \
-  qt/res/images/allforonebusiness_logo_horizontal.png \
-  qt/res/images/downArrow_dark.png \
-  qt/res/images/downArrow_small_dark.png \
-  qt/res/images/downArrow_small.png \
-  qt/res/images/upArrow_small_dark.png \
-  qt/res/images/upArrow_small.png \
-  qt/res/images/leftArrow_small_dark.png \
-  qt/res/images/rightArrow_small_dark.png \
-  qt/res/images/qtreeview_selected.png
+  qt/res/images/splash_regtest.png
 
 RES_CSS = \
-  qt/res/css/default.css
-
-RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
+  qt/res/css/default.css \
+  qt/allforonebusiness/res/css/style_dark.css \
+  qt/allforonebusiness/res/css/style_light.css
 
 BITCOIN_RC = qt/res/allforonebusiness-qt-res.rc
 
 BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
-  -I$(builddir)/qt/forms
+  -I$(builddir)/qt/forms -DQT_NO_KEYWORDS
 
 qt_libbitcoinqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
-  $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
+  $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(SVG_CFLAGS) $(CHARTS_CFLAGS)
 qt_libbitcoinqt_a_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 qt_libbitcoinqt_a_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) $(QT_PIE_FLAGS)
 
 qt_libbitcoinqt_a_SOURCES = $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(QT_FORMS_UI) \
-  $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES)
+  $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS)
 
 nodist_qt_libbitcoinqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) $(PROTOBUF_CC) \
   $(PROTOBUF_H) $(QT_QRC_CPP) $(QT_QRC_LOCALE_CPP)
@@ -397,7 +647,7 @@ $(QT_MOC_CPP): $(PROTOBUF_H)
 
 # allforonebusiness-qt binary #
 qt_allforonebusiness_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
-  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
+  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(SVG_CFLAGS) $(CHARTS_CFLAGS)
 qt_allforonebusiness_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
 qt_allforonebusiness_qt_SOURCES = qt/allforonebusiness.cpp
@@ -414,8 +664,8 @@ endif
 if ENABLE_ZMQ
 qt_allforonebusiness_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_allforonebusiness_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
+qt_allforonebusiness_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBSAPLING) $(LIBRUSTZCASH) $(LIBZCASH_LIBS) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(SVG_LIBS) $(CHARTS_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 qt_allforonebusiness_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 qt_allforonebusiness_qt_LIBTOOLFLAGS = $(AM_LIBTOOLFLAGS) --tag CXX
@@ -440,12 +690,12 @@ $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 	@rm $(@D)/temp_$(<F)
 
-$(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES) $(PROTOBUF_H)
+$(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(PROTOBUF_H)
 	@test -f $(RCC)
 	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name allforonebusiness $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
-CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno qt/temp_allforonebusiness_locale.qrc
+CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno qt/allforonebusiness/*.gcda qt/allforonebusiness/*.gcno qt/allforonebusiness/settings/*.gcda qt/allforonebusiness/settings/*.gcno qt/temp_allforonebusiness_locale.qrc
 
 CLEANFILES += $(CLEAN_QT)
 

@@ -1,54 +1,62 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2019 The PIVX developers
+// Copyright (c) 2015-2020 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_PRIMITIVES_TRANSACTION_H
 #define BITCOIN_PRIMITIVES_TRANSACTION_H
 
 #include "amount.h"
-#include "libzerocoin/CoinSpend.h"
+#include "memusage.h"
 #include "script/script.h"
 #include "serialize.h"
+#include "optional.h"
 #include "uint256.h"
 
+#include "sapling/sapling_transaction.h"
+
+#include <atomic>
 #include <list>
 
 class CTransaction;
 
+// contextual flag to guard the serialization for v5 upgrade.
+// can be removed once v5 enforcement is activated.
+extern std::atomic<bool> g_IsSaplingActive;
+
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
-class COutPoint
+class BaseOutPoint
 {
 public:
     uint256 hash;
     uint32_t n;
 
-    COutPoint() { SetNull(); }
-    COutPoint(uint256 hashIn, uint32_t nIn) { hash = hashIn; n = nIn; }
+    BaseOutPoint() { SetNull(); }
+    BaseOutPoint(uint256 hashIn, uint32_t nIn) { hash = hashIn; n = nIn; }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(FLATDATA(*this));
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(hash);
+        READWRITE(n);
     }
 
     void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
     bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
-    bool IsMasternodeReward(const CTransaction* tx) const;
 
-    friend bool operator<(const COutPoint& a, const COutPoint& b)
+    friend bool operator<(const BaseOutPoint& a, const BaseOutPoint& b)
     {
         return (a.hash < b.hash || (a.hash == b.hash && a.n < b.n));
     }
 
-    friend bool operator==(const COutPoint& a, const COutPoint& b)
+    friend bool operator==(const BaseOutPoint& a, const BaseOutPoint& b)
     {
         return (a.hash == b.hash && a.n == b.n);
     }
 
-    friend bool operator!=(const COutPoint& a, const COutPoint& b)
+    friend bool operator!=(const BaseOutPoint& a, const BaseOutPoint& b)
     {
         return !(a == b);
     }
@@ -56,8 +64,29 @@ public:
     std::string ToString() const;
     std::string ToStringShort() const;
 
-    uint256 GetHash();
+    size_t DynamicMemoryUsage() const { return 0; }
 
+    uint256 GetHash() const;
+
+};
+
+/** An outpoint - a combination of a transaction hash and an index n into its vout */
+class COutPoint : public BaseOutPoint
+{
+public:
+    COutPoint() : BaseOutPoint() {};
+    COutPoint(uint256 hashIn, uint32_t nIn) : BaseOutPoint(hashIn, nIn) {};
+    std::string ToString() const;
+};
+
+/** An outpoint - a combination of a transaction hash and an index n into its sapling
+ * output description (vShieldedOutput) */
+class SaplingOutPoint : public BaseOutPoint
+{
+public:
+    SaplingOutPoint() : BaseOutPoint() {};
+    SaplingOutPoint(uint256 hashIn, uint32_t nIn) : BaseOutPoint(hashIn, nIn) {};
+    std::string ToString() const;
 };
 
 /** An input of a transaction.  It contains the location of the previous
@@ -79,14 +108,13 @@ public:
 
     explicit CTxIn(COutPoint prevoutIn, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=std::numeric_limits<unsigned int>::max());
     CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn=CScript(), uint32_t nSequenceIn=std::numeric_limits<uint32_t>::max());
-    CTxIn(const libzerocoin::CoinSpend& spend, libzerocoin::CoinDenomination denom);
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(prevout);
-        READWRITE(scriptSig);
+        READWRITE(*(CScriptBase*)(&scriptSig));
         READWRITE(nSequence);
     }
 
@@ -111,6 +139,8 @@ public:
     }
 
     std::string ToString() const;
+
+    size_t DynamicMemoryUsage() const { return scriptSig.DynamicMemoryUsage(); }
 };
 
 /** An output of a transaction.  It contains the public key that the next input
@@ -133,9 +163,9 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(nValue);
-        READWRITE(scriptPubKey);
+        READWRITE(*(CScriptBase*)(&scriptPubKey));
     }
 
     void SetNull()
@@ -162,22 +192,31 @@ public:
     }
 
     uint256 GetHash() const;
+    bool GetKeyIDFromUTXO(CKeyID& keyIDRet) const;
 
-    bool IsDust(CFeeRate minRelayTxFee) const
+    CAmount GetDustThreshold(const CFeeRate &minRelayTxFee) const
     {
-        // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units uafo-per-kilobyte.
-        // If you'd pay more than 1/3 in fees to spend something, then we consider it dust.
-        // A typical txout is 34 bytes big, and will need a CTxIn of at least 148 bytes to spend
-        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 10000 uafo per kB
-        // and that means that fee per txout is 182 * 10000 / 1000 = 1820 uafo.
-        // So dust is a txout less than 1820 *3 = 5460 uafo
-        // with default -minrelaytxfee = minRelayTxFee = 10000 uafo per kB.
-        size_t nSize = GetSerializeSize(SER_DISK,0)+148u;
-        return (nValue < 3*minRelayTxFee.GetFee(nSize));
+        // "Dust" is defined in terms of CTransaction::minRelayTxFee,
+        // which has units satoshis-per-kilobyte.
+        // If you'd pay more than 1/3 in fees
+        // to spend something, then we consider it dust.
+        // A typical spendable txout is 34 bytes big, and will
+        // need a CTxIn of at least 148 bytes to spend:
+        // so dust is a spendable txout less than 546 satoshis
+        // with default minRelayTxFee.
+        if (scriptPubKey.IsUnspendable())
+            return 0;
+
+        size_t nSize = GetSerializeSize(*this, SER_DISK, 0) + 148u;
+        return 3 * minRelayTxFee.GetFee(nSize);
+    }
+
+    bool IsDust(const CFeeRate& minRelayTxFee) const
+    {
+        return (nValue < GetDustThreshold(minRelayTxFee));
     }
 
     bool IsZerocoinMint() const;
-    CAmount GetZerocoinMinted() const;
 
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
@@ -192,6 +231,8 @@ public:
     }
 
     std::string ToString() const;
+
+    size_t DynamicMemoryUsage() const { return scriptPubKey.DynamicMemoryUsage(); }
 };
 
 struct CMutableTransaction;
@@ -207,7 +248,10 @@ private:
     void UpdateHash() const;
 
 public:
-    static const int32_t CURRENT_VERSION=1;
+    static const int32_t STANDARD_VERSION = 1;
+    static const int32_t SAPLING_VERSION = 2;
+
+    static const int32_t CURRENT_VERSION = STANDARD_VERSION;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
@@ -218,28 +262,36 @@ public:
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     const uint32_t nLockTime;
-    //const unsigned int nTime;
+    Optional<SaplingTxData> sapData{SaplingTxData()}; // Future: Don't initialize it by default
 
     /** Construct a CTransaction that qualifies as IsNull() */
     CTransaction();
 
     /** Convert a CMutableTransaction into a CTransaction. */
     CTransaction(const CMutableTransaction &tx);
+    CTransaction(CMutableTransaction &&tx);
 
     CTransaction& operator=(const CTransaction& tx);
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(*const_cast<int32_t*>(&this->nVersion));
-        nVersion = this->nVersion;
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(*const_cast<int32_t*>(&nVersion));
         READWRITE(*const_cast<std::vector<CTxIn>*>(&vin));
         READWRITE(*const_cast<std::vector<CTxOut>*>(&vout));
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
+
+        if (g_IsSaplingActive && nVersion == CTransaction::SAPLING_VERSION) {
+            READWRITE(*const_cast<Optional<SaplingTxData>*>(&sapData));
+        }
+
         if (ser_action.ForRead())
             UpdateHash();
     }
+
+    template <typename Stream>
+    CTransaction(deserialize_type, Stream& s) : CTransaction(CMutableTransaction(deserialize, s)) {}
 
     bool IsNull() const {
         return vin.empty() && vout.empty();
@@ -249,10 +301,32 @@ public:
         return hash;
     }
 
+    bool hasSaplingData() const
+    {
+        return sapData != nullopt &&
+            (!sapData->vShieldedOutput.empty() ||
+            !sapData->vShieldedSpend.empty());
+    };
+
+    bool isSapling() const
+    {
+        return nVersion == SAPLING_VERSION;
+    }
+
+    /*
+     * Context for the two methods below:
+     * We can think of the Sapling shielded part of the transaction as an input
+     * or output according to whether valueBalance - the sum of shielded input
+     * values minus the sum of shielded output values - is positive or negative.
+     */
+
     // Return sum of txouts.
     CAmount GetValueOut() const;
     // GetValueIn() is a method on CCoinsViewCache, because
     // inputs must be known to compute value in.
+
+    // Return sum of (positive valueBalance or zero) and JoinSplit vpub_new
+    CAmount GetShieldedValueIn() const;
 
     // Compute priority, given priority of inputs and (optionally) tx size
     double ComputePriority(double dPriorityInputs, unsigned int nTxSize=0) const;
@@ -267,15 +341,10 @@ public:
 
     bool ContainsZerocoins() const
     {
-        return HasZerocoinSpendInputs() || HasZerocoinPublicSpendInputs() || HasZerocoinMintOutputs();
+        return HasZerocoinSpendInputs() || HasZerocoinMintOutputs();
     }
 
-    CAmount GetZerocoinMinted() const;
     CAmount GetZerocoinSpent() const;
-    int GetZerocoinMintCount() const;
-
-    bool UsesUTXO(const COutPoint out);
-    std::list<COutPoint> GetOutPoints() const;
 
     bool IsCoinBase() const
     {
@@ -283,6 +352,8 @@ public:
     }
 
     bool IsCoinStake() const;
+    bool CheckColdStake(const CScript& script) const;
+    bool HasP2CSOutputs() const;
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
@@ -294,7 +365,11 @@ public:
         return a.hash != b.hash;
     }
 
+    unsigned int GetTotalSize() const;
+
     std::string ToString() const;
+
+    size_t DynamicMemoryUsage() const;
 };
 
 /** A mutable version of CTransaction. */
@@ -304,6 +379,7 @@ struct CMutableTransaction
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     uint32_t nLockTime;
+    Optional<SaplingTxData> sapData{SaplingTxData()}; // Future: Don't initialize it by default
 
     CMutableTransaction();
     CMutableTransaction(const CTransaction& tx);
@@ -311,12 +387,20 @@ struct CMutableTransaction
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(this->nVersion);
-        nVersion = this->nVersion;
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(nVersion);
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
+
+        if (g_IsSaplingActive && nVersion == CTransaction::SAPLING_VERSION) {
+            READWRITE(*const_cast<Optional<SaplingTxData>*>(&sapData));
+        }
+    }
+
+    template <typename Stream>
+    CMutableTransaction(deserialize_type, Stream& s) {
+        Unserialize(s);
     }
 
     /** Compute the hash of this CMutableTransaction. This is computed on the
@@ -326,5 +410,11 @@ struct CMutableTransaction
 
     std::string ToString() const;
 };
+
+typedef std::shared_ptr<const CTransaction> CTransactionRef;
+static inline CTransactionRef MakeTransactionRef() { return std::make_shared<const CTransaction>(); }
+template <typename Tx> static inline CTransactionRef MakeTransactionRef(Tx&& txIn) { return std::make_shared<const CTransaction>(std::forward<Tx>(txIn)); }
+static inline CTransactionRef MakeTransactionRef(const CTransactionRef& txIn) { return txIn; }
+static inline CTransactionRef MakeTransactionRef(CTransactionRef&& txIn) { return std::move(txIn); }
 
 #endif // BITCOIN_PRIMITIVES_TRANSACTION_H

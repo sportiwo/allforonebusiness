@@ -1,17 +1,19 @@
 // Copyright (c) 2013 The Bitcoin Core developers
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2020 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "data/sighash.json.h"
-#include "main.h"
-#include "random.h"
+#include "test/test_allforonebusiness.h"
+
+#include "test/data/sighash.json.h"
+
+#include "consensus/tx_verify.h"
 #include "serialize.h"
 #include "script/script.h"
 #include "script/interpreter.h"
 #include "util.h"
+#include "validation.h"
 #include "version.h"
-#include "test_allforonebusiness.h"
 
 #include <iostream>
 
@@ -27,7 +29,7 @@ uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, un
     if (nIn >= txTo.vin.size())
     {
         printf("ERROR: SignatureHash() : nIn=%d out of range\n", nIn);
-        return 1;
+        return UINT256_ONE;
     }
     CMutableTransaction txTmp(txTo);
 
@@ -58,7 +60,7 @@ uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, un
         if (nOut >= txTmp.vout.size())
         {
             printf("ERROR: SignatureHash() : nOut=%d out of range\n", nOut);
-            return 1;
+            return UINT256_ONE;
         }
         txTmp.vout.resize(nOut+1);
         for (unsigned int i = 0; i < nOut; i++)
@@ -86,31 +88,63 @@ uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, un
 void static RandomScript(CScript &script) {
     static const opcodetype oplist[] = {OP_FALSE, OP_1, OP_2, OP_3, OP_CHECKSIG, OP_IF, OP_VERIF, OP_RETURN, OP_CODESEPARATOR};
     script = CScript();
-    int ops = (insecure_rand() % 10);
+    int ops = (InsecureRandRange(10));
     for (int i=0; i<ops; i++)
-        script << oplist[insecure_rand() % (sizeof(oplist)/sizeof(oplist[0]))];
+        script << oplist[InsecureRandRange(sizeof(oplist)/sizeof(oplist[0]))];
 }
 
 void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
-    tx.nVersion = insecure_rand();
+    bool isSapling = !(InsecureRand32() % 7);
+    if (isSapling) {
+        tx.nVersion = 2;
+    } else {
+        do tx.nVersion = InsecureRand32(); while (tx.nVersion == 2);
+    }
     tx.vin.clear();
     tx.vout.clear();
-    tx.nLockTime = (insecure_rand() % 2) ? insecure_rand() : 0;
-    int ins = (insecure_rand() % 4) + 1;
-    int outs = fSingle ? ins : (insecure_rand() % 4) + 1;
+    tx.sapData->vShieldedSpend.clear();
+    tx.sapData->vShieldedOutput.clear();
+    tx.nLockTime = (InsecureRandBool()) ? InsecureRand32() : 0;
+    int ins = (InsecureRandBits(2)) + 1;
+    int outs = fSingle ? ins : (InsecureRandBits(2)) + 1;
     for (int in = 0; in < ins; in++) {
-        tx.vin.push_back(CTxIn());
+        tx.vin.emplace_back();
         CTxIn &txin = tx.vin.back();
-        txin.prevout.hash = GetRandHash();
-        txin.prevout.n = insecure_rand() % 4;
+        txin.prevout.hash = InsecureRand256();
+        txin.prevout.n = InsecureRandBits(2);
         RandomScript(txin.scriptSig);
-        txin.nSequence = (insecure_rand() % 2) ? insecure_rand() : (unsigned int)-1;
+        txin.nSequence = (InsecureRandBool()) ? InsecureRand32() : (unsigned int)-1;
     }
     for (int out = 0; out < outs; out++) {
-        tx.vout.push_back(CTxOut());
+        tx.vout.emplace_back();
         CTxOut &txout = tx.vout.back();
-        txout.nValue = insecure_rand() % 100000000;
+        txout.nValue = InsecureRandRange(100000000);
         RandomScript(txout.scriptPubKey);
+    }
+
+    if (tx.nVersion == 2) {
+        int shielded_spends = (InsecureRandBits(2)) + 1;
+        int shielded_outs = (InsecureRandBits(2)) + 1;
+        tx.sapData->valueBalance = InsecureRandRange(100000000);;
+        for (int spend = 0; spend < shielded_spends; spend++) {
+            SpendDescription sdesc;
+            sdesc.cv = GetRandHash();
+            sdesc.anchor = GetRandHash();
+            sdesc.nullifier = GetRandHash();
+            sdesc.rk = GetRandHash();
+            randombytes_buf(sdesc.zkproof.begin(), sdesc.zkproof.size());
+            tx.sapData->vShieldedSpend.push_back(sdesc);
+        }
+        for (int out = 0; out < shielded_outs; out++) {
+            OutputDescription odesc;
+            odesc.cv = GetRandHash();
+            odesc.cmu = GetRandHash();
+            odesc.ephemeralKey = GetRandHash();
+            randombytes_buf(odesc.encCiphertext.begin(), odesc.encCiphertext.size());
+            randombytes_buf(odesc.outCiphertext.begin(), odesc.outCiphertext.size());
+            randombytes_buf(odesc.zkproof.begin(), odesc.zkproof.size());
+            tx.sapData->vShieldedOutput.push_back(odesc);
+        }
     }
 }
 
@@ -118,7 +152,7 @@ BOOST_FIXTURE_TEST_SUITE(sighash_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(sighash_test)
 {
-    seed_insecure_rand(false);
+    SeedInsecureRand(false);
 
     #if defined(PRINT_SIGHASH_JSON)
     std::cout << "[\n";
@@ -130,20 +164,19 @@ BOOST_AUTO_TEST_CASE(sighash_test)
     nRandomTests = 500;
     #endif
     for (int i=0; i<nRandomTests; i++) {
-        int nHashType = insecure_rand();
+        int nHashType = InsecureRand32();
         CMutableTransaction txTo;
         RandomTransaction(txTo, (nHashType & 0x1f) == SIGHASH_SINGLE);
         CScript scriptCode;
         RandomScript(scriptCode);
-        int nIn = insecure_rand() % txTo.vin.size();
+        int nIn = InsecureRandRange(txTo.vin.size());
 
         uint256 sh, sho;
         sho = SignatureHashOld(scriptCode, txTo, nIn, nHashType);
-        sh = SignatureHash(scriptCode, txTo, nIn, nHashType);
+        sh = SignatureHash(scriptCode, txTo, nIn, nHashType, 0, SIGVERSION_BASE);
         #if defined(PRINT_SIGHASH_JSON)
         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
         ss << txTo;
-
         std::cout << "\t[\"" ;
         std::cout << HexStr(ss.begin(), ss.end()) << "\", \"";
         std::cout << HexStr(scriptCode) << "\", ";
@@ -155,7 +188,9 @@ BOOST_AUTO_TEST_CASE(sighash_test)
         }
         std::cout << "\n";
         #endif
-        BOOST_CHECK(sh == sho);
+        if (txTo.nVersion != CTransaction::SAPLING_VERSION) { // Sapling has a different signature.
+            BOOST_CHECK(sh == sho);
+        }
     }
     #if defined(PRINT_SIGHASH_JSON)
     std::cout << "]\n";
@@ -163,6 +198,7 @@ BOOST_AUTO_TEST_CASE(sighash_test)
 }
 
 // Goal: check that SignatureHash generates correct hash
+// TODO: Update with Sapling transactions..
 BOOST_AUTO_TEST_CASE(sighash_from_data)
 {
     UniValue tests = read_json(std::string(json_tests::sighash, json_tests::sighash + sizeof(json_tests::sighash)));
@@ -206,7 +242,7 @@ BOOST_AUTO_TEST_CASE(sighash_from_data)
           continue;
         }
 
-        sh = SignatureHash(scriptCode, tx, nIn, nHashType);
+        sh = SignatureHash(scriptCode, tx, nIn, nHashType, 0, SIGVERSION_BASE);
         BOOST_CHECK_MESSAGE(sh.GetHex() == sigHashHex, strTest);
     }
 }

@@ -1,0 +1,7 @@
+[main]
+host = https://www.transifex.com
+
+[allforonebusiness-project-translations.qt-translation-42x]
+file_filter = src/qt/locale/allforonebusiness_<lang>.ts
+source_file = src/qt/locale/allforonebusiness_en.ts
+source_lang = en

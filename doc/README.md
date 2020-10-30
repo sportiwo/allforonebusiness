@@ -26,7 +26,7 @@ Drag AllForOneBusiness-Qt to your applications folder, and then run AllForOneBus
 
 ### Need Help?
 
-* See the documentation at the [AllForOneBusiness Wiki](https://github.com/allforonebusiness/AllForOneBusiness/wiki)
+* See the documentation at the [AllForOneBusiness Wiki](https://github.com/AllForOneBusiness-Project/AllForOneBusiness/wiki)
 for help and more information.
 * Ask for help on [BitcoinTalk](https://bitcointalk.org/index.php?topic=1262920.0) or on the [AllForOneBusiness Forum](http://forum.allforonebusiness.org/).
 * Join our Discord server [Discord Server](https://discord.allforonebusiness.org)

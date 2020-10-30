@@ -68,10 +68,6 @@ More information at [allforonebusiness.org](http://www.allforonebusiness.org) Vi
 <tr><td>Phase 2</td><td>345600-388799</td><td>1.000 AFO</td><td>90% (0.9000 AFO)</td><td>10% (0.1000 AFO)</td></tr>
 <tr><td>Phase 3</td><td>388800-431999</td><td>0.875 AFO</td><td>90% (0.7875 AFO)</td><td>10% (0.0875 AFO)</td></tr>
 <tr><td>Phase 4</td><td>432000-475199</td><td>0.750 AFO</td><td>90% (0.6750 AFO)</td><td>10% (0.0750 AFO)</td></tr>
-<tr><td>Phase 5</td><td>475200-518399</td><td>0.625 AFO</td><td>90% (0.5625 AFO)</td><td>10% (0.0625 AFO)</td></tr>
-<tr><td>Phase 6</td><td>518400-561599</td><td>0.500 AFO</td><td>90% (0.3750 AFO)</td><td>10% (0.0500 AFO)</td></tr>
-<tr><td>Phase 7</td><td>561600-604799</td><td>0.375 AFO</td><td>90% (0.3375 AFO)</td><td>10% (0.0375 AFO)</td></tr>
-<tr><td>Phase 8</td><td>604800-647999</td><td>0.250 AFO</td><td>90% (0.2250 AFO)</td><td>10% (0.0250 AFO)</td></tr>
-<tr><td>Phase 9</td><td>648000-1154203</td><td>0.125 AFO</td><td>90% (0.1125 AFO)</td><td>10% (0.0125 AFO)</td></tr>
-<tr><td>Phase X</td><td>1154203-∞</td><td>0.150 AFO</td><td>84% (0.1250 AFO)</td><td>16% (0.0250 AFO)</td></tr>
+<tr><td>Phase 5</td><td>475200-480999</td><td>0.625 AFO</td><td>90% (0.5625 AFO)</td><td>10% (0.0625 AFO)</td></tr>
+<tr><td>Phase 6</td><td>481000-∞</td><td>1.5 AFO</td><td>75% (1.125 AFO)</td><td>25% (0.375 AFO)</td></tr>
 </table>

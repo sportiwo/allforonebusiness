@@ -50,4 +50,4 @@ public:
 };
 
 
-#endif //AllForOneBusiness_MINTPOOL_H
+#endif //PIVX_MINTPOOL_H

@@ -6793,4 +6793,4 @@ std::string LoadInvalidOutPoints()
     return str;
 }
 
-#endif //AllForOneBusiness_INVALID_OUTPOINTS_JSON_H
+#endif //PIVX_INVALID_OUTPOINTS_JSON_H

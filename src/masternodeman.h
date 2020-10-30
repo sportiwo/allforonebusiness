@@ -1,14 +1,15 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2020 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef MASTERNODEMAN_H
 #define MASTERNODEMAN_H
 
+#include "activemasternode.h"
 #include "base58.h"
+#include "cyclingvector.h"
 #include "key.h"
-#include "main.h"
 #include "masternode.h"
 #include "net.h"
 #include "sync.h"
@@ -17,10 +18,16 @@
 #define MASTERNODES_DUMP_SECONDS (15 * 60)
 #define MASTERNODES_DSEG_SECONDS (3 * 60 * 60)
 
+/** Maximum number of block hashes to cache */
+static const unsigned int CACHED_BLOCK_HASHES = 200;
 
 class CMasternodeMan;
+class CActiveMasternode;
 
 extern CMasternodeMan mnodeman;
+extern CActiveMasternode activeMasternode;
+extern std::string strMasterNodePrivKey;
+
 void DumpMasternodes();
 
 /** Access to the MN database (mncache.dat)
@@ -28,7 +35,7 @@ void DumpMasternodes();
 class CMasternodeDB
 {
 private:
-    boost::filesystem::path pathMN;
+    fs::path pathMN;
     std::string strMagicMessage;
 
 public:
@@ -51,10 +58,10 @@ class CMasternodeMan
 {
 private:
     // critical section to protect the inner data structures
-    mutable CCriticalSection cs;
+    mutable RecursiveMutex cs;
 
     // critical section to protect the inner data structures specifically on messaging
-    mutable CCriticalSection cs_process_message;
+    mutable RecursiveMutex cs_process_message;
 
     // map to hold all MNs
     std::vector<CMasternode> vMasternodes;
@@ -65,6 +72,12 @@ private:
     // which Masternodes we've asked for
     std::map<COutPoint, int64_t> mWeAskedForMasternodeListEntry;
 
+    // Memory Only. Updated in NewBlock (blocks arrive in order)
+    std::atomic<int> nBestHeight;
+
+    // Memory Only. Cache last block hashes. Used to verify mn pings and winners.
+    CyclingVector<uint256> cvLastBlockHashes;
+
 public:
     // Keep track of all broadcasts I've seen
     std::map<uint256, CMasternodeBroadcast> mapSeenMasternodeBroadcast;
@@ -72,12 +85,13 @@ public:
     std::map<uint256, CMasternodePing> mapSeenMasternodePing;
 
     // keep track of dsq count to prevent masternodes from gaming obfuscation queue
+    // TODO: Remove this from serialization
     int64_t nDsqCount;
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    inline void SerializationOp(Stream& s, Operation ser_action)
     {
         LOCK(cs);
         READWRITE(vMasternodes);
@@ -91,13 +105,12 @@ public:
     }
 
     CMasternodeMan();
-    CMasternodeMan(CMasternodeMan& other);
 
     /// Add an entry
     bool Add(CMasternode& mn);
 
     /// Ask (source) node for mnb
-    void AskForMN(CNode* pnode, CTxIn& vin);
+    void AskForMN(CNode* pnode, const CTxIn& vin);
 
     /// Check all Masternodes
     void Check();
@@ -107,6 +120,9 @@ public:
 
     /// Clear Masternode vector
     void Clear();
+
+    void SetBestHeight(int height) { nBestHeight.store(height, std::memory_order_release); };
+    int GetBestHeight() const { return nBestHeight.load(std::memory_order_acquire); }
 
     int CountEnabled(int protocolVersion = -1);
 
@@ -122,9 +138,6 @@ public:
     /// Find an entry in the masternode list that is next to be paid
     CMasternode* GetNextMasternodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCount);
 
-    /// Find a random entry
-    CMasternode* FindRandomNotInVec(std::vector<CTxIn>& vecToExclude, int protocolVersion = -1);
-
     /// Get the current winner for this block
     CMasternode* GetCurrentMasterNode(int mod = 1, int64_t nBlockHeight = 0, int minProtocol = 0);
 
@@ -133,14 +146,14 @@ public:
         Check();
         return vMasternodes;
     }
-
-    std::vector<std::pair<int, CMasternode> > GetMasternodeRanks(int64_t nBlockHeight, int minProtocol = 0);
+    // Retrieve the known masternodes ordered by scoring without checking them. (Only used for listmasternodes RPC call)
+    std::vector<std::pair<int64_t, CMasternode>> GetMasternodeRanks(int nBlockHeight);
     int GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, int minProtocol = 0, bool fOnlyActive = true);
-    CMasternode* GetMasternodeByRank(int nRank, int64_t nBlockHeight, int minProtocol = 0, bool fOnlyActive = true);
-
-    void ProcessMasternodeConnections();
 
     void ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
+
+    // Process GETMNLIST message
+    void ProcessGetMNList(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
 
     /// Return the number of (unique) Masternodes
     int size() { return vMasternodes.size(); }
@@ -152,10 +165,18 @@ public:
 
     void Remove(CTxIn vin);
 
-    int GetEstimatedMasternodes(int nBlock);
-
     /// Update masternode list and maps using provided CMasternodeBroadcast
     void UpdateMasternodeList(CMasternodeBroadcast mnb);
+
+    // Block hashes cycling vector management
+    void CacheBlockHash(const CBlockIndex* pindex);
+    void UncacheBlockHash(const CBlockIndex* pindex);
+    uint256 GetHashAtHeight(int nHeight) const;
+    bool IsWithinDepth(const uint256& nHash, int depth) const;
+    uint256 GetBlockHashToPing() const { return GetHashAtHeight(GetBestHeight() - MNPING_DEPTH); }
+    std::vector<uint256> GetCachedBlocks() const { return cvLastBlockHashes.GetCache(); }
 };
+
+void ThreadCheckMasternodes();
 
 #endif

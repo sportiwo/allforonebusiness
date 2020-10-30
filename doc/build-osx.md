@@ -16,7 +16,7 @@ Then install [Homebrew](https://brew.sh).
 Dependencies
 ----------------------
 
-    brew install autoconf automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf python3 qt5 zmq libevent qrencode gmp
+    brew install autoconf automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf python3 qt5 zmq libevent qrencode gmp libsodium rust
 
 See [dependencies.md](dependencies.md) for a complete overview.
 
@@ -43,7 +43,7 @@ Build AllForOneBusiness Core
 
 1. Clone the AllForOneBusiness Core source code:
 
-        git clone https://github.com/allforonebusiness/allforonebusiness
+        git clone https://github.com/allforonebusiness-project/allforonebusiness
         cd allforonebusiness
 
 2.  Make the Homebrew OpenSSL headers visible to the configure script  (do ```brew info openssl``` to find out why this is necessary, or if you use Homebrew with installation folders different from the default).
@@ -83,17 +83,17 @@ AllForOneBusiness Core is now available at `./src/allforonebusinessd`
 
 Before running, you may create an empty configuration file:
 
-    mkdir -p "/Users/${USER}/Library/Application Support/AllForOneBusiness"
+    mkdir -p "/Users/${USER}/Library/Application Support/PIVX"
 
-    touch "/Users/${USER}/Library/Application Support/AllForOneBusiness/allforonebusiness.conf"
+    touch "/Users/${USER}/Library/Application Support/PIVX/allforonebusiness.conf"
 
-    chmod 600 "/Users/${USER}/Library/Application Support/AllForOneBusiness/allforonebusiness.conf"
+    chmod 600 "/Users/${USER}/Library/Application Support/PIVX/allforonebusiness.conf"
 
 The first time you run allforonebusinessd, it will start downloading the blockchain. This process could take many hours, or even days on slower than average systems.
 
 You can monitor the download process by looking at the debug.log file:
 
-    tail -f $HOME/Library/Application\ Support/AllForOneBusiness/debug.log
+    tail -f $HOME/Library/Application\ Support/PIVX/debug.log
 
 Other commands:
 -------
