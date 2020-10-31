@@ -53,7 +53,7 @@ void ReceiveDialog::updateQr(QString address)
     ui->labelQrImg->setText("");
     ui->labelAddress->setText(address);
     QString error;
-    QColor qrColor("#D1B069");
+    QColor qrColor("#DC9A30");
     QPixmap pixmap = encodeToQr(uri, error, qrColor);
     if (!pixmap.isNull()) {
         qrImage = &pixmap;
