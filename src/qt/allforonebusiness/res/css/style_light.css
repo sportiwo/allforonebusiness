@@ -937,7 +937,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-list-caption-unconfirmed"] {
-    color:#FFFFFF;
+    color: #b6b6b6;
 }
 
 *[cssClass="text-list-caption-grey"] {
@@ -958,7 +958,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-list-amount-unconfirmed"] {
-    color:#FFFFFF;
+    color:#B6B6B6;
     font-size:16px;
 }
 
