@@ -1790,14 +1790,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-stake-afo"] {
-    color:#0a0a0a;
+    color:#171B1E;
     font-size:16px;
     padding:10px;
     border-bottom: 5px solid #1e1e1e;
 }
 
 *[cssClass="text-stake-afo-disable"] {
-    color:#0a0a0a;
+    color:#171B1E;
     font-size:16px;
     padding:10px;
     border-bottom: 5px solid #bbb8c0;
@@ -1829,7 +1829,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-chart-afo"] {
-    color: #ffffff;
+    color: #DC9A30;
     font-size:16px;
     padding-left:4px;
 }
