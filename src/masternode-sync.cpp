@@ -159,33 +159,28 @@ bool CMasternodeSync::IsBudgetFinEmpty()
 
 void CMasternodeSync::GetNextAsset()
 {
-	switch(RequestedMasternodeAssets)
-	{
-		case(MASTERNODE_SYNC_INITIAL):
-		case(MASTERNODE_SYNC_FAILED): // should never be used here actually, use Reset() instead
-			ClearFulfilledRequest();
-			RequestedMasternodeAssets = MASTERNODE_SYNC_SPORKS;
-			break;
-		case(MASTERNODE_SYNC_SPORKS):
-			lastMasternodeList = GetTime();
-			RequestedMasternodeAssets = MASTERNODE_SYNC_LIST;
-			break;
-		case(MASTERNODE_SYNC_LIST):
-			lastMasternodeWinner = GetTime();
-			RequestedMasternodeAssets = MASTERNODE_SYNC_MNW;
-			break;
-		case(MASTERNODE_SYNC_MNW):
-			lastBudgetItem = GetTime();
-			RequestedMasternodeAssets = MASTERNODE_SYNC_GOVERNANCE;
-			break;
-		case(MASTERNODE_SYNC_GOVERNANCE):
-			LogPrintf("CMasternodeSync::GetNextAsset -Sync has finished\n");
-			RequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
-			uiInterface.NotifyAdditionalDataSyncProgressChanged(1);
-			break;
-	}
-	RequestedMasternodeAttempt = 0;
-	nAssetSyncStarted = GetTime();
+    switch (RequestedMasternodeAssets) {
+    case (MASTERNODE_SYNC_INITIAL):
+    case (MASTERNODE_SYNC_FAILED): // should never be used here actually, use Reset() instead
+        ClearFulfilledRequest();
+        RequestedMasternodeAssets = MASTERNODE_SYNC_SPORKS;
+        break;
+    case (MASTERNODE_SYNC_SPORKS):
+        RequestedMasternodeAssets = MASTERNODE_SYNC_LIST;
+        break;
+    case (MASTERNODE_SYNC_LIST):
+        RequestedMasternodeAssets = MASTERNODE_SYNC_MNW;
+        break;
+    case (MASTERNODE_SYNC_MNW):
+        RequestedMasternodeAssets = MASTERNODE_SYNC_BUDGET;
+        break;
+    case (MASTERNODE_SYNC_BUDGET):
+        LogPrintf("CMasternodeSync::GetNextAsset - Sync has finished\n");
+        RequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
+        break;
+    }
+    RequestedMasternodeAttempt = 0;
+    nAssetSyncStarted = GetTime();
 }
 
 std::string CMasternodeSync::GetSyncStatus()
