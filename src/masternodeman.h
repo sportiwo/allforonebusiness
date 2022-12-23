@@ -7,6 +7,7 @@
 #define MASTERNODEMAN_H
 
 #include "activemasternode.h"
+#include "activemasternodeman.h"
 #include "base58.h"
 #include "cyclingvector.h"
 #include "key.h"
@@ -23,6 +24,7 @@ static const unsigned int CACHED_BLOCK_HASHES = 200;
 
 class CMasternodeMan;
 class CActiveMasternode;
+extern CActiveMasternodeMan amnodeman;
 
 extern CMasternodeMan mnodeman;
 extern CActiveMasternode activeMasternode;

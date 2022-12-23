@@ -2113,31 +2113,36 @@ bool CFinalizedBudget::GetPayeeAndAmount(int64_t nBlockHeight, CScript& payee, C
 
 void CFinalizedBudget::SubmitVote()
 {
-    // function called only from initialized masternodes
-    assert(fMasterNode && activeMasternode.vin != nullopt);
+    
+    for (auto& activeMasternode : amnodeman.GetActiveMasternodes()) {
+    
+        // function called only from initialized masternodes
+        assert(fMasterNode);
+        if(activeMasternode.vin != nullopt) continue;
 
-    std::string strError = "";
-    CPubKey pubKeyMasternode;
-    CKey keyMasternode;
+        std::string strError = "";
+        CPubKey pubKeyMasternode;
+        CKey keyMasternode;
 
-    if (!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, keyMasternode, pubKeyMasternode)) {
-        LogPrint(BCLog::MNBUDGET,"%s: Error upon calling GetKeysFromSecret\n", __func__);
-        return;
-    }
+        if (!CMessageSigner::GetKeysFromSecret(activeMasternode.strMasterNodePrivKey, keyMasternode, pubKeyMasternode)) {
+            LogPrint(BCLog::MNBUDGET,"%s: Error upon calling GetKeysFromSecret\n", __func__);
+            return;
+        }
 
-    CFinalizedBudgetVote vote(*(activeMasternode.vin), GetHash());
-    if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
-        LogPrint(BCLog::MNBUDGET,"%s: Failure to sign.", __func__);
-        return;
-    }
+        CFinalizedBudgetVote vote(*(activeMasternode.vin), GetHash());
+        if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
+            LogPrint(BCLog::MNBUDGET,"%s: Failure to sign.", __func__);
+            return;
+        }
 
-    if (budget.UpdateFinalizedBudget(vote, NULL, strError)) {
-        LogPrint(BCLog::MNBUDGET,"%s: new finalized budget vote - %s\n", __func__, vote.GetHash().ToString());
+        if (budget.UpdateFinalizedBudget(vote, NULL, strError)) {
+            LogPrint(BCLog::MNBUDGET,"%s: new finalized budget vote - %s\n", __func__, vote.GetHash().ToString());
 
-        budget.AddSeenFinalizedBudgetVote(vote);
-        vote.Relay();
-    } else {
-        LogPrint(BCLog::MNBUDGET,"%s: Error submitting vote - %s\n", __func__, strError);
+            budget.AddSeenFinalizedBudgetVote(vote);
+            vote.Relay();
+        } else {
+            LogPrint(BCLog::MNBUDGET,"%s: Error submitting vote - %s\n", __func__, strError);
+        }
     }
 }
 

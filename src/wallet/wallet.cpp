@@ -12,6 +12,7 @@
 #include "guiinterfaceutil.h"
 #include "masternode-budget.h"
 #include "masternode-payments.h"
+#include "masternodeconfig.h"
 #include "policy/policy.h"
 #include "script/sign.h"
 #include "spork.h"
@@ -2923,8 +2924,14 @@ bool CWallet::CreateCoinStake(
             txNew.vout.clear();
             continue;
         }
-        txNew.vin.emplace_back(in);
 
+        if(pwalletMain->IsSpent(out.tx->GetHash(), out.i)) {
+            continue;
+        }
+
+
+        txNew.vin.emplace_back(in);
+        LogPrintf("FOR coin =%s (%s) NEW TX=%s vin=%s",out.tx->GetHash().ToString(),out.i, txNew.GetHash().ToString(), in.prevout.GetHash().ToString());
         break;
     }
     LogPrint(BCLog::STAKING, "%s: attempted staking %d times\n", __func__, nAttempts);

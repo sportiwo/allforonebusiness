@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "activemasternode.h"
+#include "activemasternodeman.h"
 #include "chainparams.h"
 #include "db.h"
 #include "init.h"
@@ -264,58 +265,63 @@ UniValue mnbudgetvote(const JSONRPCRequest& request)
         if (!fMasterNode)
             throw JSONRPCError(RPC_MISC_ERROR, _("This is not a masternode. 'local' option disabled."));
 
-        if (activeMasternode.vin == nullopt)
-            throw JSONRPCError(RPC_MISC_ERROR, _("Active Masternode not initialized."));
+        // if (activeMasternode.vin == nullopt)
+        //     throw JSONRPCError(RPC_MISC_ERROR, _("Active Masternode not initialized."));
 
         CPubKey pubKeyMasternode;
         CKey keyMasternode;
 
         UniValue statusObj(UniValue::VOBJ);
 
-        while (true) {
-            if (!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, keyMasternode, pubKeyMasternode)) {
-                failed++;
-                statusObj.pushKV("node", "local");
-                statusObj.pushKV("result", "failed");
-                statusObj.pushKV("error", "Masternode signing error, GetKeysFromSecret failed.");
+        for(auto& activeMasternode : amnodeman.GetActiveMasternodes()) {
+            while(true) {
+                if (activeMasternode.vin == nullopt) {
+                    failed++;
+                    statusObj.pushKV("node", "local");
+                    statusObj.pushKV("alias", activeMasternode.strAlias);
+                    statusObj.pushKV("result", "failed");
+                    statusObj.pushKV("error", "Active Masternode not initialized.");
+                    resultsObj.push_back(statusObj);
+                    break;
+                }
+
+                CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
+                if (pmn == NULL) {
+                    failed++;
+                    statusObj.pushKV("node", "local");
+                    statusObj.pushKV("result", "failed");
+                    statusObj.pushKV("error", "Failure to find masternode in list : " + activeMasternode.vin->ToString());
+                    resultsObj.push_back(statusObj);
+                    break;
+                }
+
+                CBudgetVote vote(*(activeMasternode.vin), hash, nVote);
+                if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
+                    failed++;
+                    statusObj.pushKV("node", "local");
+                    statusObj.pushKV("result", "failed");
+                    statusObj.pushKV("error", "Failure to sign.");
+                    resultsObj.push_back(statusObj);
+                    break;
+                }
+
+                std::string strError = "";
+                if (budget.AddAndRelayProposalVote(vote, strError)) {
+                    success++;
+                    statusObj.pushKV("node", "local");
+                    statusObj.pushKV("result", "success");
+                    statusObj.pushKV("error", "");
+                } else {
+                    failed++;
+                    statusObj.pushKV("node", "local");
+                    statusObj.pushKV("result", "failed");
+                    statusObj.pushKV("error", "Error voting : " + strError);
+                }
                 resultsObj.push_back(statusObj);
                 break;
+
             }
 
-            CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
-            if (pmn == NULL) {
-                failed++;
-                statusObj.pushKV("node", "local");
-                statusObj.pushKV("result", "failed");
-                statusObj.pushKV("error", "Failure to find masternode in list : " + activeMasternode.vin->ToString());
-                resultsObj.push_back(statusObj);
-                break;
-            }
-
-            CBudgetVote vote(*(activeMasternode.vin), hash, nVote);
-            if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
-                failed++;
-                statusObj.pushKV("node", "local");
-                statusObj.pushKV("result", "failed");
-                statusObj.pushKV("error", "Failure to sign.");
-                resultsObj.push_back(statusObj);
-                break;
-            }
-
-            std::string strError = "";
-            if (budget.AddAndRelayProposalVote(vote, strError)) {
-                success++;
-                statusObj.pushKV("node", "local");
-                statusObj.pushKV("result", "success");
-                statusObj.pushKV("error", "");
-            } else {
-                failed++;
-                statusObj.pushKV("node", "local");
-                statusObj.pushKV("result", "failed");
-                statusObj.pushKV("error", "Error voting : " + strError);
-            }
-            resultsObj.push_back(statusObj);
-            break;
         }
 
         UniValue returnObj(UniValue::VOBJ);
@@ -809,43 +815,94 @@ UniValue mnfinalbudget(const JSONRPCRequest& request)
     }
 
     if (strCommand == "vote") {
-        if (!fMasterNode)
-            throw JSONRPCError(RPC_MISC_ERROR, _("This is not a masternode. 'local' option disabled."));
-
-        if (activeMasternode.vin == nullopt)
-            throw JSONRPCError(RPC_MISC_ERROR, _("Active Masternode not initialized."));
-
         if (request.params.size() != 2)
             throw std::runtime_error("Correct usage is 'mnfinalbudget vote BUDGET_HASH'");
 
-        std::string strHash = request.params[1].get_str();
-        uint256 hash(uint256S(strHash));
+        if (!fMasterNode)
+            throw JSONRPCError(RPC_MISC_ERROR, _("This is not a masternode. 'local' option disabled."));
 
-        CPubKey pubKeyMasternode;
-        CKey keyMasternode;
+        UniValue returnObj(UniValue::VOBJ);
 
-        if (!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, keyMasternode, pubKeyMasternode))
-            return "Error upon calling GetKeysFromSecret";
+        for (auto& activeMasternode : amnodeman.GetActiveMasternodes()) {
 
-        CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
-        if (pmn == NULL) {
-            return "Failure to find masternode in list : " + activeMasternode.vin->ToString();
+            if (activeMasternode.vin == nullopt) continue;
+
+            std::string strHash = request.params[1].get_str();
+            uint256 hash(uint256S(strHash));
+
+            CPubKey pubKeyMasternode;
+            CKey keyMasternode;
+
+            if (!CMessageSigner::GetKeysFromSecret(activeMasternode.strMasterNodePrivKey, keyMasternode, pubKeyMasternode)) {
+                returnObj.pushKV(activeMasternode.strAlias, "Error upon calling GetKeysFromSecret");
+                continue;
+            }
+
+            CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
+            if (pmn == NULL) {
+                returnObj.pushKV(activeMasternode.strAlias, "Failure to find masternode in list : " + activeMasternode.vin->ToString());
+                continue;
+            }
+
+            CFinalizedBudgetVote vote(*(activeMasternode.vin), hash);
+            if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
+                returnObj.pushKV(activeMasternode.strAlias, "Failure to sign.");
+                continue;
+            }
+
+            std::string strError = "";
+            if (budget.UpdateFinalizedBudget(vote, NULL, strError)) {
+                budget.AddSeenFinalizedBudgetVote(vote);
+                vote.Relay();
+                returnObj.pushKV(activeMasternode.strAlias, "success");
+            } else {
+                returnObj.pushKV(activeMasternode.strAlias, "Error voting : " + strError);
+            }
         }
 
-        CFinalizedBudgetVote vote(*(activeMasternode.vin), hash);
-        if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
-            return "Failure to sign.";
-        }
-
-        std::string strError = "";
-        if (budget.UpdateFinalizedBudget(vote, NULL, strError)) {
-            budget.AddSeenFinalizedBudgetVote(vote);
-            vote.Relay();
-            return "success";
-        } else {
-            return "Error voting : " + strError;
-        }
+        return returnObj;
     }
+
+
+
+    // if (strCommand == "vote") {
+    //     if (!fMasterNode)
+    //         throw JSONRPCError(RPC_MISC_ERROR, _("This is not a masternode. 'local' option disabled."));
+
+    //     if (activeMasternode.vin == nullopt)
+    //         throw JSONRPCError(RPC_MISC_ERROR, _("Active Masternode not initialized."));
+
+    //     if (request.params.size() != 2)
+    //         throw std::runtime_error("Correct usage is 'mnfinalbudget vote BUDGET_HASH'");
+
+    //     std::string strHash = request.params[1].get_str();
+    //     uint256 hash(uint256S(strHash));
+
+    //     CPubKey pubKeyMasternode;
+    //     CKey keyMasternode;
+
+    //     if (!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, keyMasternode, pubKeyMasternode))
+    //         return "Error upon calling GetKeysFromSecret";
+
+    //     CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
+    //     if (pmn == NULL) {
+    //         return "Failure to find masternode in list : " + activeMasternode.vin->ToString();
+    //     }
+
+    //     CFinalizedBudgetVote vote(*(activeMasternode.vin), hash);
+    //     if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
+    //         return "Failure to sign.";
+    //     }
+
+    //     std::string strError = "";
+    //     if (budget.UpdateFinalizedBudget(vote, NULL, strError)) {
+    //         budget.AddSeenFinalizedBudgetVote(vote);
+    //         vote.Relay();
+    //         return "success";
+    //     } else {
+    //         return "Error voting : " + strError;
+    //     }
+    // }
 
     if (strCommand == "show") {
         UniValue resultObj(UniValue::VOBJ);

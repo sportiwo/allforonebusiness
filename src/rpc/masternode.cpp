@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "activemasternode.h"
+#include "activemasternodeman.h"
 #include "db.h"
 #include "init.h"
 #include "masternode-payments.h"
@@ -522,23 +523,60 @@ UniValue getmasternodestatus (const JSONRPCRequest& request)
     if (!fMasterNode)
         throw JSONRPCError(RPC_MISC_ERROR, _("This is not a masternode."));
 
-    if (activeMasternode.vin == nullopt)
-        throw JSONRPCError(RPC_MISC_ERROR, _("Active Masternode not initialized."));
+    UniValue resultsObj(UniValue::VARR);
 
-    CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
+    for (auto& activeMasternode : amnodeman.GetActiveMasternodes()) {
+        if (activeMasternode.vin == nullopt) {
+            UniValue mnObj(UniValue::VOBJ);
+            mnObj.pushKV("alias", activeMasternode.strAlias);
+            mnObj.pushKV("txhash", "N/A");
+            mnObj.pushKV("outputidx", -1);
+            mnObj.pushKV("netaddr", activeMasternode.service.ToString());
+            mnObj.pushKV("addr", "N/A");
+            mnObj.pushKV("status", activeMasternode.GetStatus());
+            mnObj.pushKV("message", activeMasternode.GetStatusMessage());
+            resultsObj.push_back(mnObj);
+            continue;
+        }
 
-    if (pmn) {
-        UniValue mnObj(UniValue::VOBJ);
-        mnObj.pushKV("txhash", activeMasternode.vin->prevout.hash.ToString());
-        mnObj.pushKV("outputidx", (uint64_t)activeMasternode.vin->prevout.n);
-        mnObj.pushKV("netaddr", activeMasternode.service.ToString());
-        mnObj.pushKV("addr", EncodeDestination(pmn->pubKeyCollateralAddress.GetID()));
-        mnObj.pushKV("status", activeMasternode.GetStatus());
-        mnObj.pushKV("message", activeMasternode.GetStatusMessage());
-        return mnObj;
+        CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
+
+        if (pmn) {
+            UniValue mnObj(UniValue::VOBJ);
+            mnObj.pushKV("alias", activeMasternode.strAlias);
+            mnObj.pushKV("txhash", activeMasternode.vin->prevout.hash.ToString());
+            mnObj.pushKV("outputidx", (uint64_t)activeMasternode.vin->prevout.n);
+            mnObj.pushKV("netaddr", activeMasternode.service.ToString());
+            mnObj.pushKV("addr", EncodeDestination(pmn->pubKeyCollateralAddress.GetID()));
+            mnObj.pushKV("status", activeMasternode.GetStatus());
+            mnObj.pushKV("message", activeMasternode.GetStatusMessage());
+            resultsObj.push_back(mnObj);
+        } else {
+            throw std::runtime_error("Masternode not found in the list of available masternodes. Current status: " + activeMasternode.GetStatusMessage());
+        }
     }
-    throw std::runtime_error("Masternode not found in the list of available masternodes. Current status: "
-                        + activeMasternode.GetStatusMessage());
+
+    return resultsObj;
+
+    
+
+    // if (activeMasternode.vin == nullopt)
+    //     throw JSONRPCError(RPC_MISC_ERROR, _("Active Masternode not initialized."));
+
+    // CMasternode* pmn = mnodeman.Find(*(activeMasternode.vin));
+
+    // if (pmn) {
+    //     UniValue mnObj(UniValue::VOBJ);
+    //     mnObj.pushKV("txhash", activeMasternode.vin->prevout.hash.ToString());
+    //     mnObj.pushKV("outputidx", (uint64_t)activeMasternode.vin->prevout.n);
+    //     mnObj.pushKV("netaddr", activeMasternode.service.ToString());
+    //     mnObj.pushKV("addr", EncodeDestination(pmn->pubKeyCollateralAddress.GetID()));
+    //     mnObj.pushKV("status", activeMasternode.GetStatus());
+    //     mnObj.pushKV("message", activeMasternode.GetStatusMessage());
+    //     return mnObj;
+    // }
+    // throw std::runtime_error("Masternode not found in the list of available masternodes. Current status: "
+    //                     + activeMasternode.GetStatusMessage());
 }
 
 UniValue getmasternodewinners (const JSONRPCRequest& request)

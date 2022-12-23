@@ -144,6 +144,8 @@ LIBSAPLING_H = \
 # allforonebusiness core #
 BITCOIN_CORE_H = \
   activemasternode.h \
+  activemasternodeman.h \
+  activemasternodeconfig.h \
   addrdb.h \
   addrman.h \
   allocators.h \
@@ -364,6 +366,8 @@ libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
   activemasternode.cpp \
+  activemasternodeconfig.cpp \
+  activemasternodeman.cpp \
   bip38.cpp \
   denomination_functions.cpp \
   interface/wallet.cpp \

@@ -5,6 +5,7 @@
 
 // clang-format off
 #include "activemasternode.h"
+#include "activemasternodeman.h"
 #include "masternode-sync.h"
 #include "masternode-payments.h"
 #include "masternode-budget.h"
@@ -386,7 +387,8 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode)
                 GetNextAsset();
 
                 // Try to activate our masternode if possible
-                activeMasternode.ManageStatus();
+                // activeMasternode.ManageStatus();
+                amnodeman.ManageStatus();
                 return false;
             }
 
@@ -395,7 +397,8 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode)
                 (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 3 || GetTime() - nAssetSyncStarted > MASTERNODE_SYNC_TIMEOUT * 5)) {
                 // maybe there is no budgets at all, so just finish syncing
                 GetNextAsset();
-                activeMasternode.ManageStatus();
+                // activeMasternode.ManageStatus();
+                amnodeman.ManageStatus();
                 return false;
             }
 

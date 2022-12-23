@@ -23,12 +23,12 @@ void CActiveMasternode::ManageStatus()
 
     if (!fMasterNode) return;
 
-    LogPrint(BCLog::MASTERNODE, "CActiveMasternode::ManageStatus() - Begin\n");
+    LogPrintf("CActiveMasternode::ManageStatus(%s) - Begin\n", strAlias);
 
     //need correct blocks to send ping
     if (!Params().IsRegTestNet() && !masternodeSync.IsBlockchainSynced()) {
         status = ACTIVE_MASTERNODE_SYNC_IN_PROCESS;
-        LogPrintf("CActiveMasternode::ManageStatus() - %s\n", GetStatusMessage());
+        LogPrintf("CActiveMasternode::ManageStatus(%s) - %s\n", strAlias, GetStatusMessage());
         return;
     }
 
@@ -38,8 +38,8 @@ void CActiveMasternode::ManageStatus()
         CMasternode* pmn;
         pmn = mnodeman.Find(pubKeyMasternode);
         if (pmn != nullptr) {
-            pmn->Check();
-            if (pmn->IsEnabled() && pmn->protocolVersion == PROTOCOL_VERSION)
+            // pmn->Check();
+            // if (pmn->IsEnabled() && pmn->protocolVersion == PROTOCOL_VERSION)
                 EnableHotColdMasterNode(pmn->vin, pmn->addr);
         }
     }
@@ -51,20 +51,20 @@ void CActiveMasternode::ManageStatus()
 
         if (pwalletMain->IsLocked()) {
             notCapableReason = "Wallet is locked.";
-            LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+            LogPrintf("CActiveMasternode::ManageStatus(%s) - not capable: %s\n", strAlias, notCapableReason);
             return;
         }
 
         if (pwalletMain->GetAvailableBalance() == 0) {
             notCapableReason = "Hot node, waiting for remote activation.";
-            LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+            LogPrintf("CActiveMasternode::ManageStatus(%s) - not capable: %s\n", strAlias, notCapableReason);
             return;
         }
 
         if (strMasterNodeAddr.empty()) {
             if (!GetLocal(service)) {
                 notCapableReason = "Can't detect external address. Please use the masternodeaddr configuration option.";
-                LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+                LogPrintf("CActiveMasternode::ManageStatus(%s) - not capable: %s\n", strAlias, notCapableReason);
                 return;
             }
         } else {
@@ -78,19 +78,19 @@ void CActiveMasternode::ManageStatus()
         if (!CMasternodeBroadcast::CheckDefaultPort(service, errorMessage, "CActiveMasternode::ManageStatus()"))
             return;
 
-        LogPrintf("CActiveMasternode::ManageStatus() - Checking inbound connection to '%s'\n", service.ToString());
+        LogPrintf("CActiveMasternode::ManageStatus(%s) - Checking inbound connection to '%s'\n", strAlias, service.ToString());
 
         CAddress addr(service, NODE_NETWORK);
         if (!g_connman->OpenNetworkConnection(addr, true, nullptr)) {
             notCapableReason = "Could not connect to " + service.ToString();
-            LogPrintf("CActiveMasternode::ManageStatus() - not capable: %s\n", notCapableReason);
+            LogPrintf("CActiveMasternode::ManageStatus($s) - not capable: %s\n", strAlias, notCapableReason);
             return;
         }
     }
 
     //send to all peers
     if (!SendMasternodePing(errorMessage)) {
-        LogPrintf("CActiveMasternode::ManageStatus() - Error on Ping: %s\n", errorMessage);
+        LogPrintf("CActiveMasternode::ManageStatus(%s) - Error on Ping: %s\n", strAlias, errorMessage);
     }
 }
 
@@ -136,7 +136,7 @@ bool CActiveMasternode::SendMasternodePing(std::string& errorMessage)
         return false;
     }
 
-    LogPrintf("CActiveMasternode::SendMasternodePing() - Relay Masternode Ping vin = %s\n", vin->ToString());
+    LogPrintf("CActiveMasternode::SendMasternodePing() %s - Relay Masternode Ping vin = %s\n", strAlias, vin->ToString());
 
     const uint256& nBlockHash = mnodeman.GetBlockHashToPing();
     CMasternodePing mnp(*vin, nBlockHash);
@@ -150,7 +150,7 @@ bool CActiveMasternode::SendMasternodePing(std::string& errorMessage)
     if (pmn != NULL) {
         if (pmn->IsPingedWithin(MasternodePingSeconds(), mnp.sigTime)) {
             errorMessage = "Too early to send Masternode Ping";
-            return false;
+            //return false;
         }
 
         pmn->lastPing = mnp;

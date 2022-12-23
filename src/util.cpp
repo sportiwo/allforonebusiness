@@ -85,6 +85,8 @@
 const char * const AllForOneBusiness_CONF_FILENAME = "allforonebusiness.conf";
 const char * const AllForOneBusiness_PID_FILENAME = "allforonebusiness.pid";
 const char * const AllForOneBusiness_MASTERNODE_CONF_FILENAME = "masternode.conf";
+const char * const PIVX_ACTIVE_MASTERNODE_CONF_FILENAME = "activemasternode.conf";
+
 
 
 // PIVX only features
@@ -524,6 +526,12 @@ fs::path GetConfigFile()
 fs::path GetMasternodeConfigFile()
 {
     fs::path pathConfigFile(gArgs.GetArg("-mnconf", AllForOneBusiness_MASTERNODE_CONF_FILENAME));
+    return AbsPathForConfigVal(pathConfigFile);
+}
+
+fs::path GetActiveMasternodeConfigFile()
+{
+    fs::path pathConfigFile(gArgs.GetArg("-activemnconf", PIVX_ACTIVE_MASTERNODE_CONF_FILENAME));
     return AbsPathForConfigVal(pathConfigFile);
 }
 

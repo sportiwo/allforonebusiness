@@ -16,6 +16,8 @@
 #include "init.h"
 
 #include "activemasternode.h"
+#include "activemasternodeman.h"
+#include "activemasternodeconfig.h"
 #include "addrman.h"
 #include "amount.h"
 #include "checkpoints.h"
@@ -575,18 +577,18 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    return FormatParagraph(strprintf(_("Copyright (C) 2009-%i The Bitcoin Core Developers"), COPYRIGHT_YEAR)) + "\n" +
-           "\n" +
-           FormatParagraph(strprintf(_("Copyright (C) 2014-%i The Dash Core Developers"), COPYRIGHT_YEAR)) + "\n" +
-           "\n" +
-           FormatParagraph(strprintf(_("Copyright (C) 2015-%i The AllForOneBusiness Core Developers"), COPYRIGHT_YEAR)) + "\n" +
-           "\n" +
-           FormatParagraph(_("This is experimental software.")) + "\n" +
-           "\n" +
-           FormatParagraph(_("Distributed under the MIT software license, see the accompanying file COPYING or <http://www.opensource.org/licenses/mit-license.php>.")) + "\n" +
-           "\n" +
-           FormatParagraph(_("This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit <https://www.openssl.org/> and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.")) +
-           "\n";
+    // return FormatParagraph(strprintf(_("Copyright (C) 2009-%i The Bitcoin Core Developers"), COPYRIGHT_YEAR)) + "\n" +
+    //        "\n" +
+    //        FormatParagraph(strprintf(_("Copyright (C) 2014-%i The Dash Core Developers"), COPYRIGHT_YEAR)) + "\n" +
+    //        "\n" +
+    //        FormatParagraph(strprintf(_("Copyright (C) 2015-%i The AllForOneBusiness Core Developers"), COPYRIGHT_YEAR)) + "\n" +
+    //        "\n" +
+    //        FormatParagraph(_("This is experimental software.")) + "\n" +
+    //        "\n" +
+    //        FormatParagraph(_("Distributed under the MIT software license, see the accompanying file COPYING or <http://www.opensource.org/licenses/mit-license.php>.")) + "\n" +
+    //        "\n" +
+    //        FormatParagraph(_("This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit <https://www.openssl.org/> and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.")) +
+    //        "\n";
 }
 
 static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex)
@@ -980,6 +982,45 @@ void InitLogging()
 #endif
     LogPrintf("AllForOneBusiness version %s (%s)\n", version_string, CLIENT_DATE);
 }
+
+
+bool AppInitActiveMasternode(std::string strAlias, std::string strMasterNodePrivKey)
+{
+    if (strAlias.empty()) {
+        return UIError(_("activemasternode alias cannot be empty"));
+    }
+
+    CActiveMasternode activeMasternode;
+
+    activeMasternode.strAlias = strAlias;
+
+    activeMasternode.strMasterNodePrivKey = strMasterNodePrivKey;
+
+    std::string errorMessage;
+
+    CKey key;
+    CPubKey pubkey;
+
+    if (!CMessageSigner::GetKeysFromSecret(activeMasternode.strMasterNodePrivKey, key, pubkey)) {
+        return UIError(_("Invalid masternodeprivkey. Please see documenation."));
+    }
+
+    activeMasternode.pubKeyMasternode = pubkey;
+
+    amnodeman.Add(activeMasternode);
+
+    return true;
+}
+
+bool AppInitActiveMasternode(CActiveMasternodeConfig::CActiveMasternodeEntry activeMasternodeEntry)
+{
+    return AppInitActiveMasternode(
+        activeMasternodeEntry.strAlias,
+        activeMasternodeEntry.strMasterNodePrivKey
+    );
+}
+
+
 
 /** Initialize allforonebusiness.
  *  @pre Parameters should be parsed and config file should be read.
@@ -1817,45 +1858,21 @@ bool AppInit2()
 
     if (fMasterNode) {
         LogPrintf("IS MASTER NODE\n");
-        strMasterNodeAddr = gArgs.GetArg("-masternodeaddr", "");
 
-        LogPrintf(" addr %s\n", strMasterNodeAddr.c_str());
-
-        if (!strMasterNodeAddr.empty()) {
-            const CChainParams& params = Params();
-            int nPort;
-            int nDefaultPort = params.GetDefaultPort();
-            std::string strHost;
-            SplitHostPort(strMasterNodeAddr, nPort, strHost);
-
-            // Allow for the port number to be omitted here and just double check
-            // that if a port is supplied, it matches the required default port.
-            if (nPort == 0) nPort = nDefaultPort;
-            if (nPort != nDefaultPort && !params.IsRegTestNet()) {
-                return UIError(strprintf(_("Invalid -masternodeaddr port %d, only %d is supported on %s-net."),
-                    nPort, nDefaultPort, Params().NetworkIDString()));
-            }
-            CService addrTest(LookupNumeric(strHost.c_str(), nPort));
-            if (!addrTest.IsValid()) {
-                return UIError(strprintf(_("Invalid -masternodeaddr address: %s"), strMasterNodeAddr));
-            }
-        }
-
-        strMasterNodePrivKey = gArgs.GetArg("-masternodeprivkey", "");
-        if (!strMasterNodePrivKey.empty()) {
-            std::string errorMessage;
-
-            CKey key;
-            CPubKey pubkey;
-
-            if (!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, key, pubkey)) {
-                return UIError(_("Invalid masternodeprivkey. Please see documenation."));
-            }
-
-            activeMasternode.pubKeyMasternode = pubkey;
-
+        //legacy
+        if(!gArgs.GetArg("-masternodeprivkey", "").empty()) 
+        {
+            if(!AppInitActiveMasternode("legacy", gArgs.GetArg("-masternodeprivkey", ""))) return false;
         } else {
-            return UIError(_("You must specify a masternodeprivkey in the configuration. Please see documentation for help."));
+            // multinode
+            std::string strErr;
+            if (!activeMasternodeConfig.read(strErr)) {
+                return UIError(strprintf(_("Error reading active masternode configuration file: %s"), strErr));
+            }
+
+            for(auto& ame : activeMasternodeConfig.getEntries()) {
+                if(!AppInitActiveMasternode(ame)) return false;
+            }
         }
     }
 

@@ -24,6 +24,8 @@
 
 /** Masternode manager */
 CMasternodeMan mnodeman;
+
+CActiveMasternodeMan amnodeman;
 /** Keep track of the active Masternode */
 CActiveMasternode activeMasternode;
 
@@ -899,7 +901,8 @@ void ThreadCheckMasternodes()
 
             // check if we should activate or ping every few minutes,
             // start right after sync is considered to be done
-            if (c % MasternodePingSeconds() == 1) activeMasternode.ManageStatus();
+            if (c % 30 == 1) amnodeman.ManageStatus();
+            // if (c % MasternodePingSeconds() == 1) activeMasternode.ManageStatus();
 
                 if (c % 60 == 0) {
                     mnodeman.CheckAndRemove();
