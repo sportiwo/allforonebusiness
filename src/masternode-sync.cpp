@@ -73,8 +73,8 @@ bool CMasternodeSync::IsBlockchainSynced()
         blockTime = pindex->nTime;
     }
 
-    if (blockTime + 60 * 60 < lastProcess)
-        return false;
+//    if (blockTime + 60 * 60 < lastProcess)
+//        return false;
 
     fBlockchainSynced = true;
 
